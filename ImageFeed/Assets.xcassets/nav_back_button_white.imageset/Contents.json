@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "tab_profile_active.png",
+      "filename" : "nav_back_button_white.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "tab_profile_active@2x.png",
+      "filename" : "nav_back_button_white@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "tab_profile_active@3x.png",
+      "filename" : "nav_back_button_white@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
