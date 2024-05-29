@@ -121,6 +121,9 @@
                                 </constraints>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="logout_button"/>
+                                <connections>
+                                    <action selector="didTapLogoutButton" destination="kP4-SS-LZE" eventType="touchUpInside" id="5fi-GL-P21"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@ekaterina_nov" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="395-c5-iUM" userLabel="Login Name Label">
                                 <rect key="frame" x="16" y="193.5" width="382" height="16"/>
@@ -159,6 +162,13 @@
                             <constraint firstItem="MUy-cK-1r6" firstAttribute="leading" secondItem="taG-Cf-hqm" secondAttribute="leading" id="zrU-UA-Hia"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="avatarImageView" destination="RAY-b6-aZ8" id="kBZ-cc-5wO"/>
+                        <outlet property="descriptionLabel" destination="MUy-cK-1r6" id="x36-bu-uJZ"/>
+                        <outlet property="loginNameLabel" destination="395-c5-iUM" id="Leq-Oy-8Gc"/>
+                        <outlet property="logoutButton" destination="f7P-YQ-kIG" id="lMM-bB-dyV"/>
+                        <outlet property="nameLabel" destination="taG-Cf-hqm" id="Zbn-84-hp7"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lhr-Wy-11Y" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
