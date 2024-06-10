@@ -21,7 +21,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <color key="backgroundColor" name="YP Black"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ImagesListCell" rowHeight="245" id="21h-Oo-ZpT" customClass="ImagesListCell" customModule="ImageFeed" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ImagesListCell" rowHeight="245" id="21h-Oo-ZpT" customClass="ImagesListCell" customModule="ImageFeed" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="414" height="245"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="21h-Oo-ZpT" id="nwm-gw-Z6Y">
@@ -90,7 +90,7 @@
                             <constraint firstAttribute="top" secondItem="2fM-Cb-zfz" secondAttribute="top" id="P0t-Yc-TCq"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" image="tab_editorial_active" id="72l-vm-gGr"/>
+                    <tabBarItem key="tabBarItem" title="" image="tab_editorial_active" id="72l-vm-gGr"/>
                     <navigationItem key="navigationItem" id="tte-Ko-icb"/>
                     <connections>
                         <outlet property="tableView" destination="2fM-Cb-zfz" id="6xo-fa-iGh"/>
