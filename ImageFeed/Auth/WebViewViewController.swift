@@ -6,16 +6,16 @@
 import UIKit
 import WebKit
 
-//protocol WebViewControllerDelegate: AnyObject {
-//    func webViewViewController(_ vc: WebViewViewController, didAuthentificateWithCode code: String)
-//    func webwebViewViewControllerDidCansel(_ vc: WebViewViewController)
-//}
+protocol WebViewViewControllerDelegate: AnyObject {
+    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
+    func webViewViewControllerDidCancel(_ vc: WebViewViewController)
+}
 
 final class WebViewViewController: UIViewController {
     
     @IBOutlet private var webView: WKWebView!
     
-    // weak var delegate: WebViewViewControllerDelegate?
+     weak var delegate: WebViewViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +33,7 @@ extension WebViewViewController: WKNavigationDelegate {
                  decidePolicyFor navigationAction: WKNavigationAction,
                  decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let code = fetchCode(from: navigationAction.request.url) {
-            //            delegate?.webViewViewController(self, didAuthentificateWithCode)
+            delegate?.webViewViewController(self, didAuthenticateWithCode: code)
             decisionHandler(.cancel)
         } else {
             decisionHandler(.allow)
