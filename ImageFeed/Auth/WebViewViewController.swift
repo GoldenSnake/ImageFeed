@@ -6,14 +6,38 @@
 import UIKit
 import WebKit
 
-class WebViewViewController: UIViewController {
+//protocol WebViewControllerDelegate: AnyObject {
+//    func webViewViewController(_ vc: WebViewViewController, didAuthentificateWithCode code: String)
+//    func webwebViewViewControllerDidCansel(_ vc: WebViewViewController)
+//}
+
+final class WebViewViewController: UIViewController {
     
     @IBOutlet private var webView: WKWebView!
+    
+    // weak var delegate: WebViewViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         loadWebView()
+        
+        webView.navigationDelegate = self
+    }
+}
+
+// MARK: - WKNavigationDelegate
+
+extension WebViewViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView,
+                 decidePolicyFor navigationAction: WKNavigationAction,
+                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if let code = fetchCode(from: navigationAction.request.url) {
+            //            delegate?.webViewViewController(self, didAuthentificateWithCode)
+            decisionHandler(.cancel)
+        } else {
+            decisionHandler(.allow)
+        }
     }
 }
 
@@ -34,5 +58,15 @@ private extension WebViewViewController {
             print("Error")
             return
         }
+    }
+    
+    private func fetchCode(from url: URL?) -> String? {
+        guard let url = url,
+              let urlComponents = URLComponents(string: url.absoluteString),
+              urlComponents.path == "/oauth/authorize/native",
+              let item = urlComponents.queryItems?.first(where: { $0.name == "code"})
+        else { return nil }
+        
+        return item.value
     }
 }
