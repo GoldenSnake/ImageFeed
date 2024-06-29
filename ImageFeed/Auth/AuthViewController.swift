@@ -40,6 +40,7 @@ final class AuthViewController: UIViewController {
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         //TODO: process code
+        print(code)
     }
 
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
