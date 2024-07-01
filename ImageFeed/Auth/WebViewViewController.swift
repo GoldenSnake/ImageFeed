@@ -20,7 +20,7 @@ final class WebViewViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        updateProgress()
         loadWebView()
         
         webView.navigationDelegate = self
@@ -39,6 +39,7 @@ final class WebViewViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
+        updateProgress()
     }
     
     override func observeValue(

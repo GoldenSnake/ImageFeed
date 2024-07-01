@@ -8,7 +8,7 @@ import Foundation
 final class OAuth2Service {
     static let shared = OAuth2Service()
     
-    private init() { }
+    init() { }
     
     func fetchOAuthToken(with code: String, completion: @escaping (Result<String, Error>) -> Void) {
         guard let request = makeOAuthTokenRequest(code: code) else { return }
