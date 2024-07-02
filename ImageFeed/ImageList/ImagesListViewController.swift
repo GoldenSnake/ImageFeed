@@ -49,6 +49,8 @@ final class ImagesListViewController: UIViewController {
         }
     }
     
+    // MARK: - Overridden Properties
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }

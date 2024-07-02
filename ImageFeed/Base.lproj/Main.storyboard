@@ -250,9 +250,9 @@
                             <constraint firstItem="PoS-pX-3Hr" firstAttribute="leading" secondItem="gkW-gj-FB0" secondAttribute="leading" constant="8" id="29E-6Q-AQ9"/>
                             <constraint firstItem="pRL-az-oRD" firstAttribute="centerX" secondItem="gkW-gj-FB0" secondAttribute="centerX" id="56e-Px-YwH"/>
                             <constraint firstItem="jEa-Je-Yqk" firstAttribute="top" secondItem="dAK-tr-N0u" secondAttribute="top" id="SXm-OP-eu3"/>
-                            <constraint firstAttribute="bottom" secondItem="jEa-Je-Yqk" secondAttribute="bottom" id="WVA-j3-mYE"/>
+                            <constraint firstItem="jEa-Je-Yqk" firstAttribute="bottom" secondItem="dAK-tr-N0u" secondAttribute="bottom" id="WVA-j3-mYE"/>
                             <constraint firstItem="PoS-pX-3Hr" firstAttribute="top" secondItem="gkW-gj-FB0" secondAttribute="top" constant="8" id="lTe-kv-1sP"/>
-                            <constraint firstItem="gkW-gj-FB0" firstAttribute="trailing" secondItem="jEa-Je-Yqk" secondAttribute="trailing" id="rI3-qA-YwS"/>
+                            <constraint firstItem="jEa-Je-Yqk" firstAttribute="trailing" secondItem="gkW-gj-FB0" secondAttribute="trailing" id="rI3-qA-YwS"/>
                             <constraint firstItem="gkW-gj-FB0" firstAttribute="bottom" secondItem="pRL-az-oRD" secondAttribute="bottom" constant="17" id="t5t-8z-llI"/>
                             <constraint firstItem="jEa-Je-Yqk" firstAttribute="leading" secondItem="gkW-gj-FB0" secondAttribute="leading" id="y9F-kS-1Bj"/>
                         </constraints>
@@ -312,19 +312,9 @@
                     <view key="view" contentMode="scaleToFill" id="vlX-If-bRE">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash_screen_logo" translatesAutoresizingMaskIntoConstraints="NO" id="gOK-7b-mAw">
-                                <rect key="frame" x="169.5" y="409" width="75" height="78"/>
-                            </imageView>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="WK6-db-hbF"/>
                         <color key="backgroundColor" name="YP Black"/>
-                        <constraints>
-                            <constraint firstItem="gOK-7b-mAw" firstAttribute="centerX" secondItem="vlX-If-bRE" secondAttribute="centerX" id="N1a-HE-TFT"/>
-                            <constraint firstItem="gOK-7b-mAw" firstAttribute="centerY" secondItem="vlX-If-bRE" secondAttribute="centerY" id="nUY-qd-ZIW"/>
-                        </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Unsplash" id="kfX-xI-Pzd"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <segue destination="if7-qz-zRA" kind="presentation" identifier="ShowAuthenticationScreen" modalPresentationStyle="fullScreen" id="7eB-Dx-x0G"/>
@@ -334,10 +324,10 @@
             </objects>
             <point key="canvasLocation" x="-2768" y="-891"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Auth Navigation Controller-->
         <scene sceneID="28E-tS-v1l">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="if7-qz-zRA" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="if7-qz-zRA" customClass="AuthNavigationController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="wIU-m4-BCi"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="2LW-AB-IN2">
@@ -360,7 +350,6 @@
         <image name="like_button_on" width="42" height="42"/>
         <image name="nav_back_button_white" width="24" height="24"/>
         <image name="share_button" width="50" height="50"/>
-        <image name="splash_screen_logo" width="75" height="78"/>
         <image name="tab_editorial_active" width="30" height="30"/>
         <image name="tab_profile_active" width="30" height="30"/>
         <namedColor name="YP Black">

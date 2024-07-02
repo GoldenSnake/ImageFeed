@@ -23,6 +23,8 @@ final class ProfileViewController: UIViewController {
         setupLogoutButton()
     }
     
+    // MARK: - Overridden Properties
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }

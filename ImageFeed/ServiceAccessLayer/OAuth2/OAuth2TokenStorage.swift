@@ -8,18 +8,22 @@ import Foundation
 final class OAuth2TokenStorage {
     
     //MARK: - Public Properties
-    static let shared = OAuth2TokenStorage()
     
     var token: String? {
-        get {
-            return userDefaults.string(forKey: "accessToken")
+            get {
+                return userDefaults.string(forKey: Keys.token.rawValue)
+            }
+            set {
+                userDefaults.set(newValue, forKey: Keys.token.rawValue)
+                print("Your token: \(token ?? "") is saved")
+            }
         }
-        set {
-            userDefaults.setValue(newValue, forKey: "accessToken")
-            print("Your token is \(token ?? "") is saved")
-        }
-    }
     
     //MARK: - Private Properties
+    
+    private enum Keys: String {
+            case token
+        }
+    
     private let userDefaults = UserDefaults.standard
 }

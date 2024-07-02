@@ -34,6 +34,7 @@ final class SingleImageViewController: UIViewController {
         rescaleAndCenterImageInScrollView(image: image)
     }
     
+    // MARK: - Overridden Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -76,5 +77,16 @@ final class SingleImageViewController: UIViewController {
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         imageView
+    }
+    
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        let verticalInset = max((scrollView.bounds.height - scrollView.contentSize.height) / 2, 0)
+        let horizontalInset = max((scrollView.bounds.width - scrollView.contentSize.width) / 2, 0)
+                
+        scrollView.contentInset = UIEdgeInsets(
+            top: verticalInset,
+            left: horizontalInset,
+            bottom: verticalInset,
+            right: horizontalInset)
     }
 }
