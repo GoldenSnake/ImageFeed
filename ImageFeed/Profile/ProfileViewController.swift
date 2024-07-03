@@ -23,12 +23,21 @@ final class ProfileViewController: UIViewController {
         setupLogoutButton()
     }
     
+    // MARK: - Overridden Properties
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     // MARK: - Private Methods
     private func setupAvatarImage() {
         let profileImage = UIImage(named: "avatar")
         
+        
         let avatarImage = UIImageView()
         avatarImage.image = profileImage
+        avatarImage.layer.cornerRadius = avatarImage.frame.size.width / 2
+        avatarImage.clipsToBounds = true
         
         avatarImage.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(avatarImage)
@@ -49,10 +58,12 @@ final class ProfileViewController: UIViewController {
         nameLabel.text = "Екатерина Новикова"
         nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         nameLabel.textColor = .ypWhite
+        nameLabel.numberOfLines = 0
         
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(nameLabel)
         
+        nameLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 16).isActive = true
         if let avatarImage {
             NSLayoutConstraint.activate([
                 nameLabel.topAnchor.constraint(equalTo: avatarImage.bottomAnchor, constant: 8),
@@ -69,10 +80,12 @@ final class ProfileViewController: UIViewController {
         loginLabel.text = "@ekaterina_nov"
         loginLabel.font = UIFont.systemFont(ofSize: 13)
         loginLabel.textColor = .ypWhite
+        loginLabel.numberOfLines = 0
         
         loginLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(loginLabel)
         
+        loginLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 16).isActive = true
         if let avatarImage {
             loginLabel.leadingAnchor.constraint(equalTo: avatarImage.leadingAnchor).isActive = true
         }
@@ -89,10 +102,12 @@ final class ProfileViewController: UIViewController {
         descriptionLabel.text = "Hello, world!"
         descriptionLabel.font = UIFont.systemFont(ofSize: 13)
         descriptionLabel.textColor = .ypWhite
+        descriptionLabel.numberOfLines = 0
         
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(descriptionLabel)
         
+        descriptionLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 16).isActive = true
         if let avatarImage {
             descriptionLabel.leadingAnchor.constraint(equalTo: avatarImage.leadingAnchor).isActive = true
         }

@@ -2,8 +2,7 @@
 //  SceneDelegate.swift
 //  ImageFeed
 //
-//  Created by Elina Shterengarts on 15.05.2024.
-//
+
 
 import UIKit
 
