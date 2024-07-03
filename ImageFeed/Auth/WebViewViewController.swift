@@ -14,7 +14,7 @@ final class WebViewViewController: UIViewController {
     @IBOutlet private var progressView: UIProgressView!
     
     // MARK: - Public Properties
-     weak var delegate: WebViewViewControllerDelegate?
+    weak var delegate: WebViewViewControllerDelegate?
     
     // MARK: - View Life Cycle
     
@@ -32,9 +32,10 @@ final class WebViewViewController: UIViewController {
             self,
             forKeyPath: #keyPath(WKWebView.estimatedProgress),
             options: .new,
-            context: nil)
+            context: nil
+        )
     }
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
@@ -56,9 +57,9 @@ final class WebViewViewController: UIViewController {
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
-          return .default
-      }
-
+        return .default
+    }
+    
     // MARK: - Private Methods
     
     private func updateProgress() {
@@ -88,14 +89,16 @@ extension WebViewViewController: WKNavigationDelegate {
 private extension WebViewViewController {
     func loadWebView() {
         var urlComponents = URLComponents(string: "https://unsplash.com/oauth/authorize")
-        urlComponents?.queryItems = [URLQueryItem(name: "client_id", value: Constants.accessKey),
-                                     URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-                                     URLQueryItem(name: "response_type", value: "code"),
-                                     URLQueryItem(name: "scope", value: Constants.accessScope)]
+        urlComponents?.queryItems = [
+            URLQueryItem(name: "client_id", value: Constants.accessKey),
+            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
+            URLQueryItem(name: "response_type", value: "code"),
+            URLQueryItem(name: "scope", value: Constants.accessScope)
+        ]
         
         if let url = urlComponents?.url{
             let request = URLRequest(url: url)
-            print(request)
+            print("authorize URL: \(request)")
             webView.load(request)
         } else {
             print("Error to load request")

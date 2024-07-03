@@ -17,7 +17,7 @@ final class OAuth2Service {
             return
         }
         
-        let decoder = JSONDecoder()
+        let decoder = SnakeCaseJSONDecoder()
         let storage = OAuth2TokenStorage()
         
         let task = URLSession.shared.data(for: request) { result in
@@ -65,4 +65,4 @@ final class OAuth2Service {
         return request
     }
 }
-    
+

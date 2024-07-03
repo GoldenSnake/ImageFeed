@@ -4,8 +4,7 @@ final class SplashViewController: UIViewController {
     // MARK: - Private Properties
     
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
-
-    private let oAuth2Service = OAuth2Service.shared
+    
     private let oAuth2TokenStorage = OAuth2TokenStorage()
     
     private lazy var logoImage: UIImageView = {
@@ -31,7 +30,7 @@ final class SplashViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
+        
         if oAuth2TokenStorage.token != nil {
             switchToTabBarController()
         } else {
@@ -39,7 +38,7 @@ final class SplashViewController: UIViewController {
             performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
         }
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNeedsStatusBarAppearanceUpdate()
@@ -53,7 +52,7 @@ final class SplashViewController: UIViewController {
             logoImage.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
-
+    
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
         let tabBarController = UIStoryboard(name: "Main", bundle: .main)

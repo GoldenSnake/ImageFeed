@@ -61,26 +61,26 @@ final class AuthViewController: UIViewController {
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         OAuth2Service.shared.fetchOAuthToken(with: code) { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .success:
-                        self.delegate?.didAuthenticate(self)
-                    case .failure(let error):
-                        navigationController?.popViewController(animated: true)
-                        print(errorMessage(from: error))
-                    }
-                }
+            guard let self else { return }
+            switch result {
+            case .success:
+                self.delegate?.didAuthenticate(self)
+            case .failure(let error):
+                navigationController?.popViewController(animated: true)
+                print(errorMessage(from: error))
+            }
+        }
         print("CODE: \(code)")
     }
     
     func errorMessage(from error: Error) -> String {
-            switch error {
-            case NetworkError.httpStatusCode(let code):
-                return "Error \(code) when receiving token."
-            default:
-                return error.localizedDescription
-            }
+        switch error {
+        case NetworkError.httpStatusCode(let code):
+            return "Error \(code) when receiving token."
+        default:
+            return error.localizedDescription
         }
+    }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         dismiss(animated: true)

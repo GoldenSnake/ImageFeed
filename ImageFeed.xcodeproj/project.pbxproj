@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01129B2C2C3584B200C2BECA /* SnakeCaseJSONDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01129B2B2C3584B200C2BECA /* SnakeCaseJSONDecoder.swift */; };
 		011B3F7A2C3449BC00AA8E57 /* AuthNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 011B3F792C3449BC00AA8E57 /* AuthNavigationController.swift */; };
 		01291E632BFBB67900438F35 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01291E622BFBB67900438F35 /* ImagesListCell.swift */; };
 		01465BB42C30B8DD005C8EF6 /* OAuth2Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01465BB32C30B8DD005C8EF6 /* OAuth2Service.swift */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01129B2B2C3584B200C2BECA /* SnakeCaseJSONDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnakeCaseJSONDecoder.swift; sourceTree = "<group>"; };
 		011B3F792C3449BC00AA8E57 /* AuthNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNavigationController.swift; sourceTree = "<group>"; };
 		01291E622BFBB67900438F35 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		01465BB32C30B8DD005C8EF6 /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 			children = (
 				0163BB1A2C13B2BE00222EE6 /* Constants.swift */,
 				0194AF3D2C30C189002EB447 /* URLSession+data.swift */,
+				01129B2B2C3584B200C2BECA /* SnakeCaseJSONDecoder.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -253,6 +256,7 @@
 				0194AF422C32E7F2002EB447 /* SplashViewController.swift in Sources */,
 				01EC97432BF5545500BA4E92 /* AppDelegate.swift in Sources */,
 				01465BB62C30C01B005C8EF6 /* OAuth2TokenStorage.swift in Sources */,
+				01129B2C2C3584B200C2BECA /* SnakeCaseJSONDecoder.swift in Sources */,
 				01C39D692C343FB9005870D3 /* WebViewViewControllerDelegate.swift in Sources */,
 				0163BB1D2C18C37800222EE6 /* AuthViewController.swift in Sources */,
 				0163BB1B2C13B2BE00222EE6 /* Constants.swift in Sources */,
