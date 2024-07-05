@@ -15,6 +15,7 @@ final class ProfileService {
     
     private var lastToken: String?
     private var task: URLSessionTask?
+    private(set) var profile: Profile?
     
     private init() { }
     
@@ -43,15 +44,16 @@ final class ProfileService {
                 do {
                     let result = try decoder.decode(ProfileResult.self, from: data)
                     let profile = Profile(profileResult: result)
+                    self?.profile = profile
                     completion(.success(profile))
                     print("Profile data successfully decoded")
                 } catch {
                     completion(.failure(error))
-                    print("Failed to decode Profile data")
+                    print("Failed to decode Profile data: \(error)")
                 }
             case .failure(let error):
                 completion(.failure(error))
-                print("Failed to fetch Profile data")
+                print("Failed to fetch Profile data. \(error.localizedDescription)")
             }
             
             self?.lastToken = nil

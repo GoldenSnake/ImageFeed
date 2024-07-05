@@ -4,8 +4,8 @@ final class SplashViewController: UIViewController {
     // MARK: - Private Properties
     
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
-    
     private let oAuth2TokenStorage = OAuth2TokenStorage()
+    private let profileService = ProfileService.shared
     
     private lazy var logoImage: UIImageView = {
         let image = UIImageView(image: UIImage(named: "LaunchScreenLogo"))
@@ -31,8 +31,8 @@ final class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if oAuth2TokenStorage.token != nil {
-            switchToTabBarController()
+        if let token = oAuth2TokenStorage.token {
+            fetchProfile(token)
         } else {
             // Show Auth Screen
             performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
@@ -59,6 +59,25 @@ final class SplashViewController: UIViewController {
             .instantiateViewController(withIdentifier: "TabBarViewController")
         window.rootViewController = tabBarController
     }
+    
+    private func fetchProfile(_ token: String) {
+        UIBlockingProgressHUD.show()
+        
+        profileService.fetchProfile(token) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
+            guard let self = self else { return }
+            
+            switch result {
+            case .success:
+                self.switchToTabBarController()
+                
+            case .failure(let error):
+                print(error)
+                print("error set profile")
+            }
+        }
+    }
 }
 
 // MARK: - Prepare
@@ -81,7 +100,12 @@ extension SplashViewController {
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true)
-        switchToTabBarController()
+        
+        guard let token = oAuth2TokenStorage.token else {
+            return
+        }
+        
+        fetchProfile(token)
     }
 }
 

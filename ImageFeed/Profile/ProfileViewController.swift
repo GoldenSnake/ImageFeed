@@ -14,6 +14,8 @@ final class ProfileViewController: UIViewController {
     private var descriptionLabel: UILabel?
     private var logoutButton: UIButton?
     
+    private let profileService = ProfileService.shared
+    
     // MARK: - View Life Cycle
     
     override func viewDidLoad() {
@@ -25,7 +27,9 @@ final class ProfileViewController: UIViewController {
         setupDescriptionLabel()
         setupLogoutButton()
         
-        fetchProfile()
+        if let profile = profileService.profile {
+                    updateProfileData(profile: profile)
+                }
     }
     
     // MARK: - Overridden Properties
@@ -36,32 +40,14 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Private Methods
     
-    private func fetchProfile() {
-        guard let token = OAuth2TokenStorage().token else {
-            print("OAuth2 token is missing")
-            return
-        }
-        
-        ProfileService.shared.fetchProfile(token) { [weak self] result in
-            guard let self else { return }
-            
-            switch result {
-            case .success(let profile):
-                
-                guard let nameLabel = self.nameLabel else {return}
-                nameLabel.text = profile.name
-                
-                guard let loginLabel = self.loginLabel else {return}
-                loginLabel.text = profile.loginName
-                
-                guard let descriptionLabel = self.descriptionLabel else {return}
-                guard let bio = profile.bio else {return}
-                descriptionLabel.text = bio
-                
-            case .failure(let error):
-                print("Failed to set profile information. \(error)")
-            }
-        }
+    private func updateProfileData(profile: Profile) {
+        guard let nameLabel = self.nameLabel else {return}
+        nameLabel.text = profile.name
+        guard let loginLabel = self.loginLabel else {return}
+        loginLabel.text = profile.loginName
+        guard let descriptionLabel = self.descriptionLabel else {return}
+        guard let bio = profile.bio else {return}
+        descriptionLabel.text = bio
     }
     
     private func setupAvatarImage() {
