@@ -28,7 +28,7 @@ final class ProfileViewController: UIViewController {
         setupLogoutButton()
         
         if let profile = profileService.profile {
-                    updateProfileData(profile: profile)
+                    updateProfileDetails(profile: profile)
                 }
     }
     
@@ -40,7 +40,7 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Private Methods
     
-    private func updateProfileData(profile: Profile) {
+    private func updateProfileDetails(profile: Profile) {
         guard let nameLabel = self.nameLabel else {return}
         nameLabel.text = profile.name
         guard let loginLabel = self.loginLabel else {return}
