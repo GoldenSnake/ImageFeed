@@ -5,22 +5,42 @@
 
 import Foundation
 
+enum OAuthServiceError: Error {
+    case failedToCreateTokenRequest
+    case repeatedTokenRequest
+}
+
 final class OAuth2Service {
     static let shared = OAuth2Service()
+    
+    private var lastCode: String?
+    private var task: URLSessionTask?
     
     private init() { }
     
     func fetchOAuthToken(with code: String, completion: @escaping (Result<String, Error>) -> Void) {
         
+        assert(Thread.isMainThread)
+        
+        guard code != lastCode else {
+            completion(.failure(OAuthServiceError.repeatedTokenRequest))
+            print("Error: Repeated Token Request")
+            return
+        }
+        task?.cancel()
+        
         guard let request = makeOAuthTokenRequest(code: code) else {
+            completion(.failure(OAuthServiceError.failedToCreateTokenRequest))
             print("Unable to make token request")
             return
         }
         
+        lastCode = code
+        
         let decoder = SnakeCaseJSONDecoder()
         let storage = OAuth2TokenStorage()
         
-        let task = URLSession.shared.data(for: request) { result in
+        task = URLSession.shared.dataMainQueue(for: request) { [weak self] result in
             switch result {
             case .success(let data):
                 do {
@@ -38,8 +58,10 @@ final class OAuth2Service {
                 completion(.failure(error))
                 print("Failed to fetch Token")
             }
+            self?.lastCode = nil
+            self?.task = nil
         }
-        task.resume()
+        task?.resume()
     }
     
     // MARK: - makeOAuthTokenRequest

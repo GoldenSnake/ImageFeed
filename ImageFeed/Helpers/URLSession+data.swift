@@ -13,7 +13,7 @@ enum NetworkError: Error {
 }
 
 extension URLSession {
-    func data(
+    func dataMainQueue(
         for request: URLRequest,
         completion: @escaping (Result<Data, Error>) -> Void
     ) -> URLSessionTask {
