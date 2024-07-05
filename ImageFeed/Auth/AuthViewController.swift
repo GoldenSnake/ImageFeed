@@ -4,6 +4,7 @@
 //
 
 import UIKit
+import ProgressHUD
 
 final class AuthViewController: UIViewController {
     
@@ -12,6 +13,7 @@ final class AuthViewController: UIViewController {
     
     // MARK: - Private Properties
     private let showWebViewSegueIdentifier = "ShowWebView"
+    private let oAuth2Service = OAuth2Service.shared
     
     // MARK: - View Life Cycle
     
@@ -60,8 +62,13 @@ final class AuthViewController: UIViewController {
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        OAuth2Service.shared.fetchOAuthToken(with: code) { [weak self] result in
+        ProgressHUD.animate()
+        
+        oAuth2Service.fetchOAuthToken(with: code) { [weak self] result in
             guard let self else { return }
+            
+            ProgressHUD.dismiss()
+            
             switch result {
             case .success:
                 self.delegate?.didAuthenticate(self)
