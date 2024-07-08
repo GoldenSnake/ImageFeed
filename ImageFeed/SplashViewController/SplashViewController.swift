@@ -6,6 +6,7 @@ final class SplashViewController: UIViewController {
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
     private let oAuth2TokenStorage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
     
     private lazy var logoImage: UIImageView = {
         let image = UIImageView(image: UIImage(named: "LaunchScreenLogo"))
@@ -69,12 +70,18 @@ final class SplashViewController: UIViewController {
             guard let self = self else { return }
             
             switch result {
-            case .success:
+            case .success(let profile):
+                profileImageService.fetchProfileImageURL(username: profile.username) { imageResult in
+                    if case .failure(let error) = imageResult {
+                        print("Error set profile image")
+                    }
+                }
+                
                 self.switchToTabBarController()
                 
             case .failure(let error):
                 print(error)
-                print("error set profile")
+                print("Error set profile")
             }
         }
     }
