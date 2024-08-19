@@ -73,15 +73,14 @@ final class SplashViewController: UIViewController {
             case .success(let profile):
                 profileImageService.fetchProfileImageURL(username: profile.username) { imageResult in
                     if case .failure(let error) = imageResult {
-                        print("Error set profile image")
+                        ErrorHandler.printError(error, origin: "SplashViewController.fetchProfile", details: "Error set profile image")
                     }
                 }
                 
                 self.switchToTabBarController()
                 
             case .failure(let error):
-                print(error)
-                print("Error set profile")
+                ErrorHandler.printError(error, origin: "SplashViewController.fetchProfile", details: "Error set profile")
             }
         }
     }

@@ -5,10 +5,21 @@
 
 import Foundation
 
-enum ProfileImageServiceError: Error {
+enum ProfileImageServiceError: Error, LocalizedError {
     case accessTokenNotDefined
     case repeatedProfileImageRequest
-    case errorProfileRequest
+    case errorProfileImageRequest
+    
+    var errorDescription: String? {
+            switch self {
+            case .accessTokenNotDefined:
+                "Access token not defined"
+            case .repeatedProfileImageRequest:
+                "Repeated profile image request"
+            case .errorProfileImageRequest:
+                "Unable to make profile image request"
+            }
+        }
 }
 
 final class ProfileImageService {
@@ -30,44 +41,40 @@ final class ProfileImageService {
         assert(Thread.isMainThread)
         
         guard let token = tokenStorage.token else {
-            completion(.failure(ProfileImageServiceError.accessTokenNotDefined))
+           let error = ProfileImageServiceError.accessTokenNotDefined
+            ErrorHandler.printError(error, origin: "ProfileImageService.fetchProfileImageURL")
+            completion(.failure(error))
             return
         }
         
         guard token != lastToken,
         username != lastUsername else {
-            completion(.failure(ProfileImageServiceError.repeatedProfileImageRequest))
+            let error = ProfileImageServiceError.repeatedProfileImageRequest
+            ErrorHandler.printError(error, origin: "ProfileImageService.fetchProfileImageURL")
+            completion(.failure(error))
             return
         }
         task?.cancel()
         
         guard let request = makeProfileImageRequest(token: token, username: username) else {
-            completion(.failure(ProfileImageServiceError.errorProfileRequest))
-            print("Unable to make profile request")
+            let error = ProfileImageServiceError.errorProfileImageRequest
+            ErrorHandler.printError(error, origin: "ProfileImageService.fetchProfileImageURL")
+            completion(.failure(error))
             return
         }
         
         lastToken = token
         lastUsername = username
-        let decoder = SnakeCaseJSONDecoder()
         
-        task = URLSession.shared.dataMainQueue(for: request) { [weak self] result in
+        task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
             switch result {
-            case .success(let data):
-                do {
-                    let result = try decoder.decode(UserResult.self, from: data)
-                    
-                    self?.avatarURL = result.profileImage.large
-                    completion(.success(result.profileImage.large))
-                    print("Profile image successfully decoded")
-                    NotificationCenter.default.post(name: ProfileImageService.didChangeNotification, object: self)
-                } catch {
-                    completion(.failure(error))
-                    print("Failed to decode profile image: \(error)")
-                }
+            case .success(let userResult):
+                self?.avatarURL = userResult.profileImage.large
+                completion(.success(userResult.profileImage.large))
+                NotificationCenter.default.post(name: ProfileImageService.didChangeNotification, object: self)
             case .failure(let error):
+                ErrorHandler.printError(error, origin: "ProfileImageService.fetchProfileImageURL", details: "Failed to fetch profile image.")
                 completion(.failure(error))
-                print("Failed to fetch profile image. \(error.localizedDescription)")
             }
             
             self?.lastToken = nil
@@ -85,7 +92,7 @@ final class ProfileImageService {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        print("Profile Image Request: \(request)")
+        print("[lOG] [ProfileImageService.makeProfileImageRequest] - Profile Image Request: \(request)")
         return request
     }
     

@@ -179,7 +179,7 @@ final class ProfileViewController: UIViewController {
               let url = URL(string: avatarURL) else { return }
         
         //TODO: Aватар
-        print("Avatar URL is: \(avatarURL)")
+        print("[lOG] [ProfileViewController.updateAvatar] - Avatar URL is: \(avatarURL)")
     }
     
     // MARK: - @objc

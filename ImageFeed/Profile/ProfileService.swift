@@ -5,9 +5,18 @@
 
 import Foundation
 
-enum ProfileServiceError: Error {
+enum ProfileServiceError: Error, LocalizedError {
     case repeatedProfileRequest
     case failedToCreateProfileRequest
+    
+    var errorDescription: String? {
+        switch self {
+        case .repeatedProfileRequest:
+            "Repeated profile request"
+        case .failedToCreateProfileRequest:
+            "Failed to create profile request"
+        }
+    }
 }
 
 final class ProfileService {
@@ -24,36 +33,32 @@ final class ProfileService {
         assert(Thread.isMainThread)
         
         guard token != lastToken else {
-            completion(.failure(ProfileServiceError.repeatedProfileRequest))
+            let error = ProfileServiceError.repeatedProfileRequest
+            ErrorHandler.printError(error, origin: "ProfileServise.fetchProfile")
+            completion(.failure(error))
             return
         }
         task?.cancel()
-        
+    
         guard let request = makeProfileRequest(token: token) else {
-            completion(.failure(ProfileServiceError.failedToCreateProfileRequest))
-            print("Unable to make profile request")
+            let error = ProfileServiceError.failedToCreateProfileRequest
+            ErrorHandler.printError(error, origin: "ProfileServise.fetchProfile")
+            completion(.failure(error))
             return
         }
         
         lastToken = token
-        let decoder = SnakeCaseJSONDecoder()
         
-        task = URLSession.shared.dataMainQueue(for: request) { [weak self] result in
+        task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
             switch result {
-            case .success(let data):
-                do {
-                    let result = try decoder.decode(ProfileResult.self, from: data)
-                    let profile = Profile(profileResult: result)
-                    self?.profile = profile
-                    completion(.success(profile))
-                    print("Profile data successfully decoded")
-                } catch {
-                    completion(.failure(error))
-                    print("Failed to decode Profile data: \(error)")
-                }
+            case .success(let profileResult):
+                            let profile = Profile(profileResult: profileResult)
+                            self?.profile = profile
+                            completion(.success(profile))
             case .failure(let error):
+                
+                ErrorHandler.printError(error, origin: "ProfileServise.fetchProfile", details: "Failed to fetch Profile data.")
                 completion(.failure(error))
-                print("Failed to fetch Profile data. \(error.localizedDescription)")
             }
             
             self?.lastToken = nil
@@ -70,7 +75,7 @@ final class ProfileService {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        print("Profile Request: \(request)")
+        print("[lOG] [ProfileService.makeProfileRequest] - Profile Request: \(request)")
         return request
     }
 }

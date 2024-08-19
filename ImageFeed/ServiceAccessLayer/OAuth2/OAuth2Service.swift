@@ -5,9 +5,21 @@
 
 import Foundation
 
-enum OAuthServiceError: Error {
+enum OAuthServiceError: Error, LocalizedError {
     case failedToCreateTokenRequest
     case repeatedTokenRequest
+    case failedToCreateURL
+    
+    var errorDescription: String? {
+            switch self {
+            case .failedToCreateTokenRequest:
+                "Unable to make token request"
+            case .repeatedTokenRequest:
+                "Repeated token request"
+            case .failedToCreateURL:
+                "Failed to create URL for token request"
+            }
+        }
 }
 
 final class OAuth2Service {
@@ -23,40 +35,32 @@ final class OAuth2Service {
         assert(Thread.isMainThread)
         
         guard code != lastCode else {
-            completion(.failure(OAuthServiceError.repeatedTokenRequest))
-            print("Error: Repeated Token Request")
+            let error = OAuthServiceError.repeatedTokenRequest
+            ErrorHandler.printError(error, origin: "OAuth2Service.fetchOAuthToken")
+            completion(.failure(error))
             return
         }
         task?.cancel()
         
         guard let request = makeOAuthTokenRequest(code: code) else {
-            completion(.failure(OAuthServiceError.failedToCreateTokenRequest))
-            print("Unable to make token request")
+            let error = OAuthServiceError.failedToCreateTokenRequest
+            ErrorHandler.printError(error, origin: "OAuth2Service.fetchOAuthToken")
+            completion(.failure(error))
             return
         }
         
         lastCode = code
         
-        let decoder = SnakeCaseJSONDecoder()
         let storage = OAuth2TokenStorage()
         
-        task = URLSession.shared.dataMainQueue(for: request) { [weak self] result in
+        task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
             switch result {
-            case .success(let data):
-                do {
-                    let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                    
-                    storage.token = tokenResponse.accessToken
-                    
-                    completion(.success(tokenResponse.accessToken))
-                    print("Token successfully decoded")
-                } catch {
-                    completion(.failure(error))
-                    print("Failed to decode Token")
-                }
+            case .success(let responseBody):
+                storage.token = responseBody.accessToken
+                completion(.success(responseBody.accessToken))
             case .failure(let error):
+                ErrorHandler.printError(error, origin: "OAuth2Service.fetchOAuthToken", details: "Failed to fetch Token")
                 completion(.failure(error))
-                print("Failed to fetch Token")
             }
             self?.lastCode = nil
             self?.task = nil
@@ -78,12 +82,13 @@ final class OAuth2Service {
         ]
         guard let url = urlComponents.url(relativeTo: Constants.defaultBaseURL)
         else {
-            print("Failed to create URL")
+            let error = OAuthServiceError.failedToCreateURL
+            ErrorHandler.printError(error, origin: "OAuthService.makeOAuthTokenRequest")
             return nil
         }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        print("URL: \(request)")
+        print("[lOG] [OAuth2Service.makeOAuthTokenRequest] - Request URL: \(request)")
         return request
     }
 }

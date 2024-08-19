@@ -74,19 +74,10 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
                 navigationController?.popViewController(animated: true)
-                print(errorMessage(from: error))
+                ErrorHandler.printError(error, origin: "AuthViewController.webViewViewController.oAuth2Service.fetchOAuthToken")
             }
         }
-        print("CODE: \(code)")
-    }
-    
-    func errorMessage(from error: Error) -> String {
-        switch error {
-        case NetworkError.httpStatusCode(let code):
-            return "Error \(code) when receiving token."
-        default:
-            return error.localizedDescription
-        }
+        print("[lOG] [AuthViewController.webViewViewController] - Authenticate code: \(code)")
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
