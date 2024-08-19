@@ -75,6 +75,15 @@ extension AuthViewController: WebViewViewControllerDelegate {
             case .failure(let error):
                 navigationController?.popViewController(animated: true)
                 ErrorHandler.printError(error, origin: "AuthViewController.webViewViewController.oAuth2Service.fetchOAuthToken")
+                
+                // Alert
+                
+                let alertController = UIAlertController(title: "Что-то пошло не так(",
+                                                        message: "Не удалось войти в систему",
+                                                        preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default)
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true)
             }
         }
         print("[lOG] [AuthViewController.webViewViewController] - Authenticate code: \(code)")
