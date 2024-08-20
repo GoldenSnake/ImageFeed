@@ -4,6 +4,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
@@ -62,7 +63,7 @@ final class ProfileViewController: UIViewController {
     }
     
     private func setupAvatarImage() {
-        let profileImage = UIImage(named: "avatar")
+        let profileImage = UIImage(named: "placeholder_avatar")
         
         
         let avatarImage = UIImageView()
@@ -177,9 +178,16 @@ final class ProfileViewController: UIViewController {
     private func updateAvatar() {
         guard let avatarURL = profileImageService.avatarURL,
               let url = URL(string: avatarURL) else { return }
-        
-        //TODO: Aватар
+
         print("[lOG] [ProfileViewController.updateAvatar] - Avatar URL is: \(avatarURL)")
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 61)
+        if let avatarImage {
+            avatarImage.kf.setImage(with: url,
+                                    placeholder: UIImage(named: "placeholder_avatar"),
+                                    options: [.processor(processor),
+                                              .cacheSerializer(FormatIndicatedCacheSerializer.png)])
+        }
     }
     
     // MARK: - @objc
