@@ -9,17 +9,20 @@ enum OAuthServiceError: Error, LocalizedError {
     case failedToCreateTokenRequest
     case repeatedTokenRequest
     case failedToCreateURL
+    case failedToSaveToken
     
     var errorDescription: String? {
-            switch self {
-            case .failedToCreateTokenRequest:
-                "Unable to make token request"
-            case .repeatedTokenRequest:
-                "Repeated token request"
-            case .failedToCreateURL:
-                "Failed to create URL for token request"
-            }
+        switch self {
+        case .failedToCreateTokenRequest:
+            "Unable to make token request"
+        case .repeatedTokenRequest:
+            "Repeated token request"
+        case .failedToCreateURL:
+            "Failed to create URL for token request"
+        case .failedToSaveToken:
+            "Failed to save token"
         }
+    }
 }
 
 final class OAuth2Service {
@@ -56,8 +59,14 @@ final class OAuth2Service {
         task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
             switch result {
             case .success(let responseBody):
-                storage.token = responseBody.accessToken
-                completion(.success(responseBody.accessToken))
+                let isSuccess = storage.setToken(responseBody.accessToken)
+                if isSuccess {
+                    completion(.success(responseBody.accessToken))
+                    print("[lOG] [OAuth2Servise] - Your token: is saved")
+                } else {
+                    ErrorHandler.printError(OAuthServiceError.failedToSaveToken, origin: "OAuth2Service.fetchOAuthToken")
+                    completion(.failure(OAuthServiceError.failedToSaveToken))
+                }
             case .failure(let error):
                 ErrorHandler.printError(error, origin: "OAuth2Service.fetchOAuthToken", details: "Failed to fetch Token")
                 completion(.failure(error))

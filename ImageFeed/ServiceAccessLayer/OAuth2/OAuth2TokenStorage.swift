@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import SwiftKeychainWrapper
 
 final class OAuth2TokenStorage {
     
@@ -11,19 +12,19 @@ final class OAuth2TokenStorage {
     
     var token: String? {
         get {
-            return userDefaults.string(forKey: Keys.token.rawValue)
-        }
-        set {
-            userDefaults.set(newValue, forKey: Keys.token.rawValue)
-            print("[lOG] [OAuth2TokenStorage] - Your token: \(token ?? "") is saved")
+            keychain.string(forKey: Keys.token.rawValue)
         }
     }
     
     //MARK: - Private Properties
     
-    private enum Keys: String {
-        case token
-    }
+    private let keychain = KeychainWrapper.standard
     
-    private let userDefaults = UserDefaults.standard
+        private enum Keys: String {
+            case token
+        }
+        
+        func setToken(_ newTokenValue: String) -> Bool {
+            keychain.set(newTokenValue, forKey: Keys.token.rawValue)
+        }
 }
