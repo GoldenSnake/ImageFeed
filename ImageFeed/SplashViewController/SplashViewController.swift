@@ -3,7 +3,6 @@ import UIKit
 final class SplashViewController: UIViewController {
     // MARK: - Private Properties
     
-    private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
     private let oAuth2TokenStorage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
@@ -25,6 +24,7 @@ final class SplashViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = .ypBlack
         view.addSubview(logoImage)
         setupConstraints()
     }
@@ -36,7 +36,17 @@ final class SplashViewController: UIViewController {
             fetchProfile(token)
         } else {
             // Show Auth Screen
-            performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
+            guard let navigationController = UIStoryboard(name: "Main", bundle: .main)
+                .instantiateViewController(withIdentifier: "AuthNavigationController") as? UINavigationController,
+                  let authViewController = navigationController.viewControllers[0] as? AuthViewController 
+            else {
+                assertionFailure("Invalid destination for AuthViewController")
+                return
+            }
+            authViewController.delegate = self
+            
+            navigationController.modalPresentationStyle = .fullScreen
+            present(navigationController, animated: true)
         }
     }
     
@@ -82,21 +92,6 @@ final class SplashViewController: UIViewController {
             case .failure(let error):
                 ErrorHandler.printError(error, origin: "SplashViewController.fetchProfile", details: "Error set profile")
             }
-        }
-    }
-}
-
-// MARK: - Prepare
-extension SplashViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showAuthenticationScreenSegueIdentifier {
-            guard
-                let navigationController = segue.destination as? UINavigationController,
-                let viewController = navigationController.viewControllers[0] as? AuthViewController
-            else { fatalError("Failed to prepare for \(showAuthenticationScreenSegueIdentifier)") }
-            viewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
         }
     }
 }
