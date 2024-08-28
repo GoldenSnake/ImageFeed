@@ -20,11 +20,11 @@ final class OAuth2TokenStorage {
     
     private let keychain = KeychainWrapper.standard
     
-        private enum Keys: String {
-            case token
-        }
-        
-        func setToken(_ newTokenValue: String) -> Bool {
-            keychain.set(newTokenValue, forKey: Keys.token.rawValue)
-        }
+    private enum Keys: String {
+        case token
+    }
+    
+    func setToken(_ newTokenValue: String) -> Bool {
+        keychain.set(newTokenValue, forKey: Keys.token.rawValue)
+    }
 }

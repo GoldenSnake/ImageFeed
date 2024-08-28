@@ -288,7 +288,7 @@
         <!--Auth Navigation Controller-->
         <scene sceneID="28E-tS-v1l">
             <objects>
-                <navigationController storyboardIdentifier="AuthViewController" automaticallyAdjustsScrollViewInsets="NO" id="if7-qz-zRA" customClass="AuthNavigationController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="AuthNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="if7-qz-zRA" customClass="AuthNavigationController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="wIU-m4-BCi"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="2LW-AB-IN2">
