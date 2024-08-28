@@ -13,7 +13,7 @@
         <!--Auth View Controller-->
         <scene sceneID="xhm-dZ-C8d">
             <objects>
-                <viewController id="jzF-bx-RTQ" customClass="AuthViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AuthViewController" id="jzF-bx-RTQ" customClass="AuthViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VSZ-2A-wkc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -283,7 +283,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gZd-vx-keP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1586" y="-362"/>
+            <point key="canvasLocation" x="-1639" y="-666"/>
         </scene>
         <!--Auth Navigation Controller-->
         <scene sceneID="28E-tS-v1l">

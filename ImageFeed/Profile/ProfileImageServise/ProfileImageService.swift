@@ -33,7 +33,7 @@ final class ProfileImageService {
     private var lastUsername: String?
     private var task: URLSessionTask?
     
-    private let tokenStorage = OAuth2TokenStorage()
+    private let tokenStorage = OAuth2TokenStorage.shared
     
     private init() { }
     

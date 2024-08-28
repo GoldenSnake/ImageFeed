@@ -54,7 +54,7 @@ final class OAuth2Service {
         
         lastCode = code
         
-        let storage = OAuth2TokenStorage()
+        let storage = OAuth2TokenStorage.shared
         
         task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
             switch result {

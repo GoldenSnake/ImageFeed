@@ -3,7 +3,7 @@ import UIKit
 final class SplashViewController: UIViewController {
     // MARK: - Private Properties
     
-    private let oAuth2TokenStorage = OAuth2TokenStorage()
+    private let oAuth2TokenStorage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     
@@ -77,7 +77,7 @@ final class SplashViewController: UIViewController {
         profileService.fetchProfile(token) { [weak self] result in
             UIBlockingProgressHUD.dismiss()
             
-            guard let self = self else { return }
+            guard let self else { return }
             
             switch result {
             case .success(let profile):
@@ -86,7 +86,7 @@ final class SplashViewController: UIViewController {
                         ErrorHandler.printError(error, origin: "SplashViewController.fetchProfile", details: "Error set profile image")
                     }
                 }
-                
+    
                 self.switchToTabBarController()
                 
             case .failure(let error):
@@ -99,6 +99,7 @@ final class SplashViewController: UIViewController {
 // MARK: - AuthViewControllerDelegate
 
 extension SplashViewController: AuthViewControllerDelegate {
+    
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true)
         

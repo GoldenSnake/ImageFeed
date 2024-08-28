@@ -39,7 +39,7 @@ final class ProfileService {
             return
         }
         task?.cancel()
-    
+        
         guard let request = makeProfileRequest(token: token) else {
             let error = ProfileServiceError.failedToCreateProfileRequest
             ErrorHandler.printError(error, origin: "ProfileServise.fetchProfile")
@@ -52,9 +52,9 @@ final class ProfileService {
         task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
             switch result {
             case .success(let profileResult):
-                            let profile = Profile(profileResult: profileResult)
-                            self?.profile = profile
-                            completion(.success(profile))
+                let profile = Profile(profileResult: profileResult)
+                self?.profile = profile
+                completion(.success(profile))
             case .failure(let error):
                 
                 ErrorHandler.printError(error, origin: "ProfileServise.fetchProfile", details: "Failed to fetch Profile data.")
