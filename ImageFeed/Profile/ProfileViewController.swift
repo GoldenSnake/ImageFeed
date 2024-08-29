@@ -29,6 +29,7 @@ final class ProfileViewController: UIViewController {
         setupLoginLabel()
         setupDescriptionLabel()
         setupLogoutButton()
+        view.backgroundColor = .ypBlack
         
         if let profile = profileService.profile {
             updateProfileDetails(profile: profile)

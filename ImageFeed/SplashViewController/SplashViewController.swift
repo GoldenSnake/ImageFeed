@@ -1,5 +1,16 @@
 import UIKit
 
+enum SplashViewControllerError: Error, LocalizedError {
+    case invalidDestination
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidDestination:
+            "Invalid destination for AuthNavigationController"
+        }
+    }
+}
+
 final class SplashViewController: UIViewController {
     // MARK: - Private Properties
     
@@ -38,9 +49,9 @@ final class SplashViewController: UIViewController {
             // Show Auth Screen
             guard let navigationController = UIStoryboard(name: "Main", bundle: .main)
                 .instantiateViewController(withIdentifier: "AuthNavigationController") as? UINavigationController,
-                  let authViewController = navigationController.viewControllers[0] as? AuthViewController 
+                  let authViewController = navigationController.viewControllers[0] as? AuthViewController
             else {
-                assertionFailure("Invalid destination for AuthViewController")
+                ErrorHandler.printError(SplashViewControllerError.invalidDestination, origin: "SplashViewController.viewDidAppear")
                 return
             }
             authViewController.delegate = self
@@ -102,12 +113,6 @@ extension SplashViewController: AuthViewControllerDelegate {
     
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true)
-        
-        guard let token = oAuth2TokenStorage.token else {
-            return
-        }
-        
-        fetchProfile(token)
     }
 }
 
