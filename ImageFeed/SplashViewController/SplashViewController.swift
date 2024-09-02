@@ -19,7 +19,7 @@ final class SplashViewController: UIViewController {
     private let profileImageService = ProfileImageService.shared
     
     private lazy var logoImage: UIImageView = {
-        let image = UIImageView(image: UIImage(named: "LaunchScreenLogo"))
+        let image = UIImageView(image: UIImage(named: "splash_screen_logo"))
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
@@ -70,8 +70,8 @@ final class SplashViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            logoImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoImage.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            logoImage.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            logoImage.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
         ])
     }
     
@@ -97,7 +97,7 @@ final class SplashViewController: UIViewController {
                         ErrorHandler.printError(error, origin: "SplashViewController.fetchProfile", details: "Error set profile image")
                     }
                 }
-    
+                
                 self.switchToTabBarController()
                 
             case .failure(let error):

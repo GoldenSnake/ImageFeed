@@ -179,7 +179,7 @@ final class ProfileViewController: UIViewController {
     private func updateAvatar() {
         guard let avatarURL = profileImageService.avatarURL,
               let url = URL(string: avatarURL) else { return }
-
+        
         print("[lOG] [ProfileViewController.updateAvatar] - Avatar URL is: \(avatarURL)")
         
         let processor = RoundCornerImageProcessor(cornerRadius: 61)
