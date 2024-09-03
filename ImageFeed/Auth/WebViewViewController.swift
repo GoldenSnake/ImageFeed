@@ -14,7 +14,12 @@ final class WebViewViewController: UIViewController {
     @IBOutlet private var progressView: UIProgressView!
     
     // MARK: - Public Properties
+    
     weak var delegate: WebViewViewControllerDelegate?
+    
+    // MARK: - Private Properties
+    
+    private var estimatedProgressObservation: NSKeyValueObservation?
     
     // MARK: - View Life Cycle
     
@@ -24,21 +29,11 @@ final class WebViewViewController: UIViewController {
         loadWebView()
         setNeedsStatusBarAppearanceUpdate()
         webView.navigationDelegate = self
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        webView.addObserver(
-            self,
-            forKeyPath: #keyPath(WKWebView.estimatedProgress),
-            options: .new,
-            context: nil
-        )
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
+        
+        estimatedProgressObservation = webView.observe(\.estimatedProgress) { [weak self] _, _ in
+                   guard let self else { return }
+                   self.updateProgress()
+               }
     }
     
     // MARK: - Overridden Methods
@@ -98,7 +93,7 @@ private extension WebViewViewController {
         
         if let url = urlComponents?.url{
             let request = URLRequest(url: url)
-            print("authorize URL: \(request)")
+            print("[lOG] [WebViewViewController.loadWebView] - Authorize URL: \(request)")
             webView.load(request)
         } else {
             print("Error to load request")

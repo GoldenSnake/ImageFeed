@@ -4,6 +4,7 @@
 //
 
 import UIKit
+import ProgressHUD
 
 final class AuthViewController: UIViewController {
     
@@ -12,6 +13,7 @@ final class AuthViewController: UIViewController {
     
     // MARK: - Private Properties
     private let showWebViewSegueIdentifier = "ShowWebView"
+    private let oAuth2Service = OAuth2Service.shared
     
     // MARK: - View Life Cycle
     
@@ -60,26 +62,31 @@ final class AuthViewController: UIViewController {
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        OAuth2Service.shared.fetchOAuthToken(with: code) { [weak self] result in
+        UIBlockingProgressHUD.show()
+        
+        oAuth2Service.fetchOAuthToken(with: code) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
             guard let self else { return }
+            
             switch result {
             case .success:
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
                 navigationController?.popViewController(animated: true)
-                print(errorMessage(from: error))
+                ErrorHandler.printError(error, origin: "AuthViewController.webViewViewController.oAuth2Service.fetchOAuthToken")
+                
+                // Alert
+                
+                let alertController = UIAlertController(title: "Что-то пошло не так(",
+                                                        message: "Не удалось войти в систему",
+                                                        preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default)
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true)
             }
         }
-        print("CODE: \(code)")
-    }
-    
-    func errorMessage(from error: Error) -> String {
-        switch error {
-        case NetworkError.httpStatusCode(let code):
-            return "Error \(code) when receiving token."
-        default:
-            return error.localizedDescription
-        }
+        print("[lOG] [AuthViewController.webViewViewController] - Authenticate code: \(code)")
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {

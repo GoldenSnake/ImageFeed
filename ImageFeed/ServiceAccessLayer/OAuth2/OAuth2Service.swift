@@ -5,41 +5,76 @@
 
 import Foundation
 
+enum OAuthServiceError: Error, LocalizedError {
+    case failedToCreateTokenRequest
+    case repeatedTokenRequest
+    case failedToCreateURL
+    case failedToSaveToken
+    
+    var errorDescription: String? {
+        switch self {
+        case .failedToCreateTokenRequest:
+            "Unable to make token request"
+        case .repeatedTokenRequest:
+            "Repeated token request"
+        case .failedToCreateURL:
+            "Failed to create URL for token request"
+        case .failedToSaveToken:
+            "Failed to save token"
+        }
+    }
+}
+
 final class OAuth2Service {
     static let shared = OAuth2Service()
+    
+    private var lastCode: String?
+    private var task: URLSessionTask?
     
     private init() { }
     
     func fetchOAuthToken(with code: String, completion: @escaping (Result<String, Error>) -> Void) {
         
+        assert(Thread.isMainThread)
+        
+        guard code != lastCode else {
+            let error = OAuthServiceError.repeatedTokenRequest
+            ErrorHandler.printError(error, origin: "OAuth2Service.fetchOAuthToken")
+            completion(.failure(error))
+            return
+        }
+        task?.cancel()
+        
         guard let request = makeOAuthTokenRequest(code: code) else {
-            print("Unable to make token request")
+            let error = OAuthServiceError.failedToCreateTokenRequest
+            ErrorHandler.printError(error, origin: "OAuth2Service.fetchOAuthToken")
+            completion(.failure(error))
             return
         }
         
-        let decoder = SnakeCaseJSONDecoder()
-        let storage = OAuth2TokenStorage()
+        lastCode = code
         
-        let task = URLSession.shared.data(for: request) { result in
+        let storage = OAuth2TokenStorage.shared
+        
+        task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
             switch result {
-            case .success(let data):
-                do {
-                    let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                    
-                    storage.token = tokenResponse.accessToken
-                    
-                    completion(.success(tokenResponse.accessToken))
-                    print("Token successfully decoded")
-                } catch {
-                    completion(.failure(error))
-                    print("Failed to decode Token")
+            case .success(let responseBody):
+                let isSuccess = storage.setToken(responseBody.accessToken)
+                if isSuccess {
+                    completion(.success(responseBody.accessToken))
+                    print("[lOG] [OAuth2Servise] - Your token: is saved")
+                } else {
+                    ErrorHandler.printError(OAuthServiceError.failedToSaveToken, origin: "OAuth2Service.fetchOAuthToken")
+                    completion(.failure(OAuthServiceError.failedToSaveToken))
                 }
             case .failure(let error):
+                ErrorHandler.printError(error, origin: "OAuth2Service.fetchOAuthToken", details: "Failed to fetch Token")
                 completion(.failure(error))
-                print("Failed to fetch Token")
             }
+            self?.lastCode = nil
+            self?.task = nil
         }
-        task.resume()
+        task?.resume()
     }
     
     // MARK: - makeOAuthTokenRequest
@@ -56,12 +91,13 @@ final class OAuth2Service {
         ]
         guard let url = urlComponents.url(relativeTo: Constants.defaultBaseURL)
         else {
-            print("Failed to create URL")
+            let error = OAuthServiceError.failedToCreateURL
+            ErrorHandler.printError(error, origin: "OAuthService.makeOAuthTokenRequest")
             return nil
         }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        print("URL: \(request)")
+        print("[lOG] [OAuth2Service.makeOAuthTokenRequest] - Request URL: \(request)")
         return request
     }
 }

@@ -4,6 +4,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
@@ -14,13 +15,34 @@ final class ProfileViewController: UIViewController {
     private var descriptionLabel: UILabel?
     private var logoutButton: UIButton?
     
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
+    // MARK: - View Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupAvatarImage()
         setupNameLabel()
         setupLoginLabel()
         setupDescriptionLabel()
         setupLogoutButton()
+        view.backgroundColor = .ypBlack
+        
+        if let profile = profileService.profile {
+            updateProfileDetails(profile: profile)
+        }
+        
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ProfileImageService.didChangeNotification,
+            object: nil,
+            queue: .main) { [weak self] _ in
+                guard let self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
     }
     
     // MARK: - Overridden Properties
@@ -30,8 +52,19 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - Private Methods
+    
+    private func updateProfileDetails(profile: Profile) {
+        guard let nameLabel = self.nameLabel else {return}
+        nameLabel.text = profile.name
+        guard let loginLabel = self.loginLabel else {return}
+        loginLabel.text = profile.loginName
+        guard let descriptionLabel = self.descriptionLabel else {return}
+        guard let bio = profile.bio else {return}
+        descriptionLabel.text = bio
+    }
+    
     private func setupAvatarImage() {
-        let profileImage = UIImage(named: "avatar")
+        let profileImage = UIImage(named: "placeholder_avatar")
         
         
         let avatarImage = UIImageView()
@@ -55,7 +88,7 @@ final class ProfileViewController: UIViewController {
     private func setupNameLabel() {
         let nameLabel = UILabel()
         
-        nameLabel.text = "Екатерина Новикова"
+        //        nameLabel.text = "Екатерина Новикова"
         nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         nameLabel.textColor = .ypWhite
         nameLabel.numberOfLines = 0
@@ -77,7 +110,7 @@ final class ProfileViewController: UIViewController {
     private func setupLoginLabel() {
         let loginLabel = UILabel()
         
-        loginLabel.text = "@ekaterina_nov"
+        //        loginLabel.text = "@ekaterina_nov"
         loginLabel.font = UIFont.systemFont(ofSize: 13)
         loginLabel.textColor = .ypWhite
         loginLabel.numberOfLines = 0
@@ -99,7 +132,7 @@ final class ProfileViewController: UIViewController {
     private func setupDescriptionLabel() {
         let descriptionLabel = UILabel()
         
-        descriptionLabel.text = "Hello, world!"
+        //        descriptionLabel.text = "Hello, world!"
         descriptionLabel.font = UIFont.systemFont(ofSize: 13)
         descriptionLabel.textColor = .ypWhite
         descriptionLabel.numberOfLines = 0
@@ -141,6 +174,21 @@ final class ProfileViewController: UIViewController {
         }
         
         self.logoutButton = logoutButton
+    }
+    
+    private func updateAvatar() {
+        guard let avatarURL = profileImageService.avatarURL,
+              let url = URL(string: avatarURL) else { return }
+        
+        print("[lOG] [ProfileViewController.updateAvatar] - Avatar URL is: \(avatarURL)")
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 61)
+        if let avatarImage {
+            avatarImage.kf.setImage(with: url,
+                                    placeholder: UIImage(named: "placeholder_avatar"),
+                                    options: [.processor(processor),
+                                              .cacheSerializer(FormatIndicatedCacheSerializer.png)])
+        }
     }
     
     // MARK: - @objc
