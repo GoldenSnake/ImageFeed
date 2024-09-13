@@ -4,7 +4,8 @@ enum ImagesListServiceError: Error, LocalizedError {
     case failedToCreatePhotosRequest
     case failedToCreateURL
     case noAccessToken
-        
+    case failedToCreateLikeRequest
+    
     var errorDescription: String? {
         switch self {
         case .failedToCreatePhotosRequest:
@@ -13,6 +14,8 @@ enum ImagesListServiceError: Error, LocalizedError {
             "Failed to create URL for photo request"
         case .noAccessToken:
             "No access token"
+        case .failedToCreateLikeRequest:
+            "Failed to create like request"
         }
     }
 }
@@ -26,7 +29,8 @@ final class ImagesListService {
     private (set) var photos: [Photo] = []
     
     private var lastLoadedPage: Int?
-    private var task: URLSessionTask?
+    private var photosTask: URLSessionTask?
+    private var likeTask: URLSessionTask?
     
     private let tokenStorage = OAuth2TokenStorage.shared
     
@@ -35,7 +39,7 @@ final class ImagesListService {
     func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
         
-        guard task == nil else {
+        guard photosTask == nil else {
             return
         }
         
@@ -53,7 +57,7 @@ final class ImagesListService {
             return
         }
         
-        task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
+        photosTask = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
             switch result {
             case .success(let photosResult):
                 photosResult.forEach { self?.photos.append(Photo(photoResult: $0)) }
@@ -63,15 +67,48 @@ final class ImagesListService {
             }
             
             self?.lastLoadedPage = nextPage
-            self?.task = nil
+            self?.photosTask = nil
         }
         
-        task?.resume()
+        photosTask?.resume()
     }
+    
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+            assert(Thread.isMainThread)
+            
+            guard likeTask == nil else {
+                return
+            }
+            
+            guard let token = tokenStorage.token else {
+                ErrorHandler.printError(ImagesListServiceError.noAccessToken,
+                                        origin: "ImagesListService.changeLike")
+                return
+            }
+            
+        guard let request = makeLikeRequest(token: token, photoId: photoId, isLike: isLike) else {
+            ErrorHandler.printError(ImagesListServiceError.failedToCreateLikeRequest,
+                                    origin: "ImagesListService.changeLike")
+            return
+        }
+            
+        
+            likeTask = URLSession.shared.dataMainQueue(for: request) { [weak self] (result: Result<Data, Error>) in
+                switch result {
+                case .success:
+                    completion(.success(()))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+                
+                self?.likeTask = nil
+            }
+            likeTask?.resume()
+        }
     
     private func makePhotosRequest(token: String, page: Int) -> URLRequest? {
         
-       guard let apiURL = Constants.apiURL else {return nil}
+        guard let apiURL = Constants.apiURL else {return nil}
         
         let url = apiURL.appendingPathComponent("photos")
         
@@ -89,4 +126,20 @@ final class ImagesListService {
         print("[lOG] [ImagesListService.makePhotosRequest] - Images Request: \(request)")
         return request
     }
+    
+    private func makeLikeRequest(token: String, photoId: String, isLike: Bool) -> URLRequest? {
+        
+        guard let apiURL = Constants.apiURL else {return nil}
+        
+        let url = apiURL
+               .appendingPathComponent("photos")
+               .appendingPathComponent(photoId)
+               .appendingPathComponent("like")
+        
+           var request = URLRequest(url: url)
+           request.httpMethod = isLike ? "POST" : "DELETE"
+           request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        print("[lOG] [ImagesListService.makeLikeRequest] - Like Request: \(request)")
+           return request
+       }
 }
