@@ -86,7 +86,7 @@ final class ImagesListService {
         var request = URLRequest(url: fullUrl)
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        print("[lOG] [ProfileImageService.makeProfileImageRequest] - Profile Image Request: \(request)")
+        print("[lOG] [ImagesListService.makePhotosRequest] - Images Request: \(request)")
         return request
     }
 }
