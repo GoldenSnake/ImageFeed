@@ -11,15 +11,15 @@ enum ProfileImageServiceError: Error, LocalizedError {
     case errorProfileImageRequest
     
     var errorDescription: String? {
-            switch self {
-            case .accessTokenNotDefined:
-                "Access token not defined"
-            case .repeatedProfileImageRequest:
-                "Repeated profile image request"
-            case .errorProfileImageRequest:
-                "Unable to make profile image request"
-            }
+        switch self {
+        case .accessTokenNotDefined:
+            "Access token not defined"
+        case .repeatedProfileImageRequest:
+            "Repeated profile image request"
+        case .errorProfileImageRequest:
+            "Unable to make profile image request"
         }
+    }
 }
 
 final class ProfileImageService {
@@ -41,14 +41,14 @@ final class ProfileImageService {
         assert(Thread.isMainThread)
         
         guard let token = tokenStorage.token else {
-           let error = ProfileImageServiceError.accessTokenNotDefined
+            let error = ProfileImageServiceError.accessTokenNotDefined
             ErrorHandler.printError(error, origin: "ProfileImageService.fetchProfileImageURL")
             completion(.failure(error))
             return
         }
         
         guard token != lastToken,
-        username != lastUsername else {
+              username != lastUsername else {
             let error = ProfileImageServiceError.repeatedProfileImageRequest
             ErrorHandler.printError(error, origin: "ProfileImageService.fetchProfileImageURL")
             completion(.failure(error))
@@ -82,6 +82,14 @@ final class ProfileImageService {
             self?.task = nil
         }
         task?.resume()
+    }
+    
+    func clearData() {
+        avatarURL = nil
+        lastToken = nil
+        lastUsername = nil
+        task?.cancel()
+        task = nil
     }
     
     private func makeProfileImageRequest(token: String, username: String) -> URLRequest? {

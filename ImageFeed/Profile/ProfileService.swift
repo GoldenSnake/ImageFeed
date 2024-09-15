@@ -67,7 +67,12 @@ final class ProfileService {
         task?.resume()
     }
     
-    
+    func clearData() {
+        profile = nil
+        lastToken = nil
+        task?.cancel()
+        task = nil
+    }
     
     private func makeProfileRequest(token: String) -> URLRequest? {
         guard let apiURL = Constants.apiURL else {return nil}

@@ -17,6 +17,7 @@ final class ProfileViewController: UIViewController {
     
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
+    private var logoutService = ProfileLogoutService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - View Life Cycle
@@ -88,7 +89,6 @@ final class ProfileViewController: UIViewController {
     private func setupNameLabel() {
         let nameLabel = UILabel()
         
-        //        nameLabel.text = "Екатерина Новикова"
         nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         nameLabel.textColor = .ypWhite
         nameLabel.numberOfLines = 0
@@ -110,7 +110,6 @@ final class ProfileViewController: UIViewController {
     private func setupLoginLabel() {
         let loginLabel = UILabel()
         
-        //        loginLabel.text = "@ekaterina_nov"
         loginLabel.font = UIFont.systemFont(ofSize: 13)
         loginLabel.textColor = .ypWhite
         loginLabel.numberOfLines = 0
@@ -132,7 +131,6 @@ final class ProfileViewController: UIViewController {
     private func setupDescriptionLabel() {
         let descriptionLabel = UILabel()
         
-        //        descriptionLabel.text = "Hello, world!"
         descriptionLabel.font = UIFont.systemFont(ofSize: 13)
         descriptionLabel.textColor = .ypWhite
         descriptionLabel.numberOfLines = 0
@@ -195,7 +193,11 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapLogoutButton() {
+        logoutService.logout()
         
+        if let window = UIApplication.shared.windows.first {
+            window.rootViewController = SplashViewController()
+        }
     }
     
 }

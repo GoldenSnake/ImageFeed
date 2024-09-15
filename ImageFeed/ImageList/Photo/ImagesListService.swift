@@ -74,37 +74,46 @@ final class ImagesListService {
     }
     
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
-            assert(Thread.isMainThread)
-            
-            guard likeTask == nil else {
-                return
-            }
-            
-            guard let token = tokenStorage.token else {
-                ErrorHandler.printError(ImagesListServiceError.noAccessToken,
-                                        origin: "ImagesListService.changeLike")
-                return
-            }
-            
+        assert(Thread.isMainThread)
+        
+        guard likeTask == nil else {
+            return
+        }
+        
+        guard let token = tokenStorage.token else {
+            ErrorHandler.printError(ImagesListServiceError.noAccessToken,
+                                    origin: "ImagesListService.changeLike")
+            return
+        }
+        
         guard let request = makeLikeRequest(token: token, photoId: photoId, isLike: isLike) else {
             ErrorHandler.printError(ImagesListServiceError.failedToCreateLikeRequest,
                                     origin: "ImagesListService.changeLike")
             return
         }
-            
         
-            likeTask = URLSession.shared.dataMainQueue(for: request) { [weak self] (result: Result<Data, Error>) in
-                switch result {
-                case .success:
-                    completion(.success(()))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-                
-                self?.likeTask = nil
+        
+        likeTask = URLSession.shared.dataMainQueue(for: request) { [weak self] (result: Result<Data, Error>) in
+            switch result {
+            case .success:
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
             }
-            likeTask?.resume()
+            
+            self?.likeTask = nil
         }
+        likeTask?.resume()
+    }
+    
+    func clearData() {
+        photos = []
+        lastLoadedPage = nil
+        photosTask?.cancel()
+        photosTask = nil
+        likeTask?.cancel()
+        likeTask = nil
+    }
     
     private func makePhotosRequest(token: String, page: Int) -> URLRequest? {
         
@@ -132,14 +141,14 @@ final class ImagesListService {
         guard let apiURL = Constants.apiURL else {return nil}
         
         let url = apiURL
-               .appendingPathComponent("photos")
-               .appendingPathComponent(photoId)
-               .appendingPathComponent("like")
+            .appendingPathComponent("photos")
+            .appendingPathComponent(photoId)
+            .appendingPathComponent("like")
         
-           var request = URLRequest(url: url)
-           request.httpMethod = isLike ? "POST" : "DELETE"
-           request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        var request = URLRequest(url: url)
+        request.httpMethod = isLike ? "POST" : "DELETE"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         print("[lOG] [ImagesListService.makeLikeRequest] - Like Request: \(request)")
-           return request
-       }
+        return request
+    }
 }
