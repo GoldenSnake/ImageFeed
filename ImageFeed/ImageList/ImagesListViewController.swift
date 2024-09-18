@@ -17,7 +17,6 @@ final class ImagesListViewController: UIViewController {
     
     private let imagesListService = ImagesListService.shared
     
-//    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     private var imagesListServiceObserver: NSObjectProtocol?
     private var photos: [Photo] = []
     
@@ -98,13 +97,13 @@ extension ImagesListViewController: UITableViewDataSource {
 
 extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-            let photo = photos[indexPath.row]
-            guard let imageUrl = URL(string: photo.thumbImageURL) else { return }
-
-            cell.cellImage.kf.indicatorType = .activity
-            cell.cellImage.kf.setImage(with: imageUrl, placeholder: UIImage(named: "placeholder"))
-            cell.dateLabel.text = photo.createdAt != nil ? dateFormatter.string(from: photo.createdAt!) : ""
-
+        let photo = photos[indexPath.row]
+        guard let imageUrl = URL(string: photo.thumbImageURL) else { return }
+        
+        cell.cellImage.kf.indicatorType = .activity
+        cell.cellImage.kf.setImage(with: imageUrl, placeholder: UIImage(named: "placeholder"))
+        cell.dateLabel.text = photo.createdAt != nil ? dateFormatter.string(from: photo.createdAt!) : ""
+        
         cell.setIsLiked(photos[indexPath.item].isLiked)
     }
     
@@ -172,11 +171,11 @@ extension ImagesListViewController: ImagesListCellDelegate {
                 ErrorHandler.printError(error, origin: "ImagesListViewController.imageListCellDidTapLike")
                 // alert
                 let alert = UIAlertController(title: "Что-то пошло не так(",
-                                                              message: "Попробуйте ещё раз позже",
-                                                              preferredStyle: .alert)
-                                let action = UIAlertAction(title: "OK", style: .default)
-                                alert.addAction(action)
-                                self.present(alert, animated: true)
+                                              message: "Попробуйте ещё раз позже",
+                                              preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK", style: .default)
+                alert.addAction(action)
+                self.present(alert, animated: true)
             }
         }
     }
