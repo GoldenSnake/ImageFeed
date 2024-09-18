@@ -98,13 +98,12 @@ extension ImagesListViewController: UITableViewDataSource {
 extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let photo = photos[indexPath.row]
+        
+        let dateText = photo.createdAt != nil ? dateFormatter.string(from: photo.createdAt!) : ""
+        
         guard let imageUrl = URL(string: photo.thumbImageURL) else { return }
         
-        cell.cellImage.kf.indicatorType = .activity
-        cell.cellImage.kf.setImage(with: imageUrl, placeholder: UIImage(named: "placeholder"))
-        cell.dateLabel.text = photo.createdAt != nil ? dateFormatter.string(from: photo.createdAt!) : ""
-        
-        cell.setIsLiked(photos[indexPath.item].isLiked)
+        cell.configCell(imageUrl: imageUrl, isLiked: photo.isLiked, date: dateText)
     }
     
     private func updateTableViewAnimated() {
