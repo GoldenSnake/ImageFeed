@@ -6,7 +6,14 @@
 import UIKit
 import WebKit
 
-final class WebViewViewController: UIViewController {
+public protocol WebViewViewControllerProtocol: AnyObject {
+    var presenter: WebViewPresenterProtocol? { get set }
+    func load(request: URLRequest)
+    func setProgressValue(_ newValue: Float)
+    func setProgressHidden(_ isHidden: Bool)
+}
+
+final class WebViewViewController: UIViewController & WebViewViewControllerProtocol {
     
     // MARK: - IBOutlet
     
@@ -19,21 +26,23 @@ final class WebViewViewController: UIViewController {
     
     // MARK: - Private Properties
     
+    var presenter: WebViewPresenterProtocol?
+    
     private var estimatedProgressObservation: NSKeyValueObservation?
     
     // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        updateProgress()
-        loadWebView()
+        
+        presenter?.viewDidLoad()
         setNeedsStatusBarAppearanceUpdate()
         webView.navigationDelegate = self
         
         estimatedProgressObservation = webView.observe(\.estimatedProgress) { [weak self] _, _ in
-                   guard let self else { return }
-                   self.updateProgress()
-               }
+            guard let self else { return }
+            self.updateProgress()
+        }
     }
     
     // MARK: - Overridden Methods
@@ -45,7 +54,7 @@ final class WebViewViewController: UIViewController {
         context: UnsafeMutableRawPointer?
     ) {
         if keyPath == #keyPath(WKWebView.estimatedProgress) {
-            updateProgress()
+            presenter?.didUpdateProgressValue(webView.estimatedProgress)
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
@@ -55,11 +64,25 @@ final class WebViewViewController: UIViewController {
         return .default
     }
     
-    // MARK: - Private Methods
+    // MARK: - WebViewViewControllerProtocol
+    
+    func load(request: URLRequest) {
+        webView.load(request)
+    }
+    
+    func setProgressValue(_ newValue: Float) {
+        progressView.progress = newValue
+    }
+    
+    func setProgressHidden(_ isHidden: Bool) {
+        progressView.isHidden = isHidden
+    }
+    
+    
+    // MARK: - Private Properties
     
     private func updateProgress() {
-        progressView.progress = Float(webView.estimatedProgress)
-        progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
+        presenter?.didUpdateProgressValue(webView.estimatedProgress)
     }
     
 }
@@ -70,7 +93,7 @@ extension WebViewViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView,
                  decidePolicyFor navigationAction: WKNavigationAction,
                  decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        if let code = fetchCode(from: navigationAction) {
+        if let code = code(from: navigationAction) {
             delegate?.webViewViewController(self, didAuthenticateWithCode: code)
             decisionHandler(.cancel)
         } else {
@@ -79,39 +102,14 @@ extension WebViewViewController: WKNavigationDelegate {
     }
 }
 
-// MARK: - loadWebView
+// MARK: - fetchCode
 
 private extension WebViewViewController {
-    func loadWebView() {
-        var urlComponents = URLComponents(string: "https://unsplash.com/oauth/authorize")
-        urlComponents?.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: Constants.accessScope)
-        ]
-        
-        if let url = urlComponents?.url{
-            let request = URLRequest(url: url)
-            print("[lOG] [WebViewViewController.loadWebView] - Authorize URL: \(request)")
-            webView.load(request)
-        } else {
-            print("Error to load request")
-            return
-        }
-    }
     
-    private func fetchCode(from navigationAction: WKNavigationAction) -> String? {
-        if
-            let url = navigationAction.request.url,
-            let urlComponents = URLComponents(string: url.absoluteString),
-            urlComponents.path == "/oauth/authorize/native",
-            let items = urlComponents.queryItems,
-            let codeItem = items.first(where: { $0.name == "code" })
-        {
-            return codeItem.value
-        } else {
-            return nil
+    private func code(from navigationAction: WKNavigationAction) -> String? {
+        if let url = navigationAction.request.url {
+            return presenter?.code(from: url)
         }
+        return nil
     }
 }
