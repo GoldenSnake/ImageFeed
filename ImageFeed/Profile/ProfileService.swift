@@ -75,7 +75,7 @@ final class ProfileService {
     }
     
     private func makeProfileRequest(token: String) -> URLRequest? {
-        guard let apiURL = Constants.apiURL else {return nil}
+        let apiURL = Constants.defaultBaseURL
         let url = apiURL.appendingPathComponent("me")
         var request = URLRequest(url: url)
         request.httpMethod = "GET"

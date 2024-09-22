@@ -93,7 +93,7 @@ final class ProfileImageService {
     }
     
     private func makeProfileImageRequest(token: String, username: String) -> URLRequest? {
-        guard let apiURL = Constants.apiURL else {return nil}
+       let apiURL = Constants.defaultBaseURL
         let url = apiURL
             .appendingPathComponent("users")
             .appendingPathComponent(username)
