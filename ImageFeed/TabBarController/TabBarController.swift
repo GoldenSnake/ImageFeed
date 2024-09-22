@@ -15,13 +15,21 @@ final class TabBarController: UITabBarController {
         )
         
         let profileViewController = ProfileViewController()
+        let profilePresenter = ProfilePresenter()
+        profileViewController.presenter = profilePresenter
         profileViewController.tabBarItem = UITabBarItem(
             title: "",
             image: UIImage(named: "tab_profile_active"),
             selectedImage: nil
         )
+        profilePresenter.view = profileViewController
         
         self.viewControllers = [imagesListViewController, profileViewController]
+        
+        let appearance = UITabBarAppearance()
+                appearance.backgroundColor = .ypBlack
+                tabBar.standardAppearance = appearance
+                tabBar.tintColor = .ypWhite
     }
     
 }

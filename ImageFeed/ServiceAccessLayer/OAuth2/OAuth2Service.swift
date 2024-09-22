@@ -89,7 +89,7 @@ final class OAuth2Service {
             URLQueryItem(name: "code", value: code),
             URLQueryItem(name: "grant_type", value: "authorization_code")
         ]
-        guard let url = urlComponents.url(relativeTo: Constants.defaultBaseURL)
+        guard let url = urlComponents.url(relativeTo: Constants.unsplashURL)
         else {
             let error = OAuthServiceError.failedToCreateURL
             ErrorHandler.printError(error, origin: "OAuthService.makeOAuthTokenRequest")

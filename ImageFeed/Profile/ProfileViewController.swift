@@ -6,7 +6,17 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+public protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfilePresenterProtocol? { get set }
+    func updateProfile(name: String, login: String, bio: String?)
+    func updateAvatar(url: URL)
+    func presentAlert(_ alert: UIAlertController)
+}
+
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
+    
+    // MARK: - Public Properties
+    var presenter: ProfilePresenterProtocol?
     
     // MARK: - Private Properties
     private var avatarImage: UIImageView?
@@ -32,18 +42,7 @@ final class ProfileViewController: UIViewController {
         setupLogoutButton()
         view.backgroundColor = .ypBlack
         
-        if let profile = profileService.profile {
-            updateProfileDetails(profile: profile)
-        }
-        
-        profileImageServiceObserver = NotificationCenter.default.addObserver(
-            forName: ProfileImageService.didChangeNotification,
-            object: nil,
-            queue: .main) { [weak self] _ in
-                guard let self else { return }
-                self.updateAvatar()
-            }
-        updateAvatar()
+        presenter?.viewDidLoad()
     }
     
     // MARK: - Overridden Properties
@@ -52,17 +51,30 @@ final class ProfileViewController: UIViewController {
         return .lightContent
     }
     
-    // MARK: - Private Methods
-    
-    private func updateProfileDetails(profile: Profile) {
+    // MARK: - ProfileViewControllerProtocol
+    func updateProfile(name: String, login: String, bio: String?) {
         guard let nameLabel = self.nameLabel else {return}
-        nameLabel.text = profile.name
+        nameLabel.text = name
         guard let loginLabel = self.loginLabel else {return}
-        loginLabel.text = profile.loginName
+        loginLabel.text = login
         guard let descriptionLabel = self.descriptionLabel else {return}
-        guard let bio = profile.bio else {return}
+        guard let bio = bio else {return}
         descriptionLabel.text = bio
     }
+    
+    func updateAvatar(url: URL) {
+        guard let avatarImage = self.avatarImage else {return}
+        avatarImage.kf.setImage(with: url,
+                                placeholder: UIImage(named: "placeholder_avatar"),
+                                options: [.processor(RoundCornerImageProcessor(cornerRadius: 61)),
+                                          .cacheSerializer(FormatIndicatedCacheSerializer.png)])
+    }
+    
+    func presentAlert(_ alert: UIAlertController) {
+        self.present(alert, animated: true)
+    }
+    
+    // MARK: - Private Methods
     
     private func setupAvatarImage() {
         let profileImage = UIImage(named: "placeholder_avatar")
@@ -174,42 +186,11 @@ final class ProfileViewController: UIViewController {
         self.logoutButton = logoutButton
     }
     
-    private func updateAvatar() {
-        guard let avatarURL = profileImageService.avatarURL,
-              let url = URL(string: avatarURL) else { return }
-        
-        print("[lOG] [ProfileViewController.updateAvatar] - Avatar URL is: \(avatarURL)")
-        
-        let processor = RoundCornerImageProcessor(cornerRadius: 61)
-        if let avatarImage {
-            avatarImage.kf.setImage(with: url,
-                                    placeholder: UIImage(named: "placeholder_avatar"),
-                                    options: [.processor(processor),
-                                              .cacheSerializer(FormatIndicatedCacheSerializer.png)])
-        }
-    }
-    
     // MARK: - @objc
     
     @objc
     private func didTapLogoutButton() {
-        let alertController = UIAlertController(title: "Пока, пока!",
-                                                message: "Уверены что хотите выйти?",
-                                                preferredStyle: .alert)
-        let yesAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
-            self?.logoutService.logout()
-            
-            if let window = UIApplication.shared.windows.first {
-                window.rootViewController = SplashViewController()
-            }
-        }
-        alertController.addAction(yesAction)
-        
-        let noAction = UIAlertAction(title: "Нет", style: .default)
-        alertController.addAction(noAction)
-        
-        self.present(alertController, animated: true)
-        
+        presenter?.logout()
     }
     
 }

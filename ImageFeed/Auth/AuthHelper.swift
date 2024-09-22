@@ -7,11 +7,11 @@ protocol AuthHelperProtocol {
 
 final class AuthHelper: AuthHelperProtocol {
     let configuration: AuthConfiguration
-
+    
     init(configuration: AuthConfiguration = .standard) {
         self.configuration = configuration
     }
-
+    
     func authRequest() -> URLRequest? {
         guard let url = authURL() else {
             return nil
@@ -19,7 +19,7 @@ final class AuthHelper: AuthHelperProtocol {
         
         return URLRequest(url: url)
     }
-
+    
     func authURL() -> URL? {
         guard
             var urlComponents = URLComponents(string: configuration.authURLString)
@@ -37,7 +37,7 @@ final class AuthHelper: AuthHelperProtocol {
         
         return urlComponents.url
     }
-
+    
     func code(from url: URL) -> String? {
         if let urlComponents = URLComponents(string: url.absoluteString),
            urlComponents.path == "/oauth/authorize/native",

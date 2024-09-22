@@ -5,6 +5,10 @@
 
 import Foundation
 
+protocol ProfileServiceProtocol {
+    var profile: Profile? { get }
+}
+
 enum ProfileServiceError: Error, LocalizedError {
     case repeatedProfileRequest
     case failedToCreateProfileRequest
@@ -19,7 +23,7 @@ enum ProfileServiceError: Error, LocalizedError {
     }
 }
 
-final class ProfileService {
+final class ProfileService: ProfileServiceProtocol {
     static let shared = ProfileService()
     
     private var lastToken: String?
