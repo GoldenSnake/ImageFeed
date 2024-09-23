@@ -28,8 +28,6 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
     
     private let imagesListService = ImagesListService.shared
     
-    private var imagesListServiceObserver: NSObjectProtocol?
-    
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MMMM yyyy"
@@ -40,33 +38,13 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
     // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        presenter = ImagesListPresenter()
-        presenter?.view = self
+        presenter?.viewDidLoad()
         
         tableView.rowHeight = 200
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         
-        imagesListServiceObserver = NotificationCenter.default.addObserver(
-            forName: ImagesListService.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            guard let self = self else {return}
-            self.presenter?.didUpdatePhotos()
-        }
-        
         imagesListService.fetchPhotosNextPage()
         
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        if let observer = imagesListServiceObserver {
-            NotificationCenter.default.removeObserver(observer)
-            imagesListServiceObserver = nil
-        }
     }
     
     // MARK: - Overridden Properties
@@ -88,6 +66,11 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+    
+    func configure(_ presenter: ImagesListPresenterProtocol) {
+        self.presenter = presenter
+        self.presenter?.view = self
     }
     
     func showAlert(alert: UIAlertController) {

@@ -27,6 +27,8 @@
 		013DD4B12CA0CE0F00F2E00A /* ProfileServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013DD4B02CA0CE0F00F2E00A /* ProfileServiceMock.swift */; };
 		013DD4B32CA0CE2D00F2E00A /* ProfileViewControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013DD4B22CA0CE2D00F2E00A /* ProfileViewControllerSpy.swift */; };
 		013DD4B52CA1ACF800F2E00A /* ImagesListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013DD4B42CA1ACF800F2E00A /* ImagesListPresenter.swift */; };
+		013DD4B82CA1DDA100F2E00A /* ImagesListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013DD4B72CA1DDA100F2E00A /* ImagesListTests.swift */; };
+		013DD4BA2CA1DF2900F2E00A /* ImagesListPresenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013DD4B92CA1DF2900F2E00A /* ImagesListPresenterSpy.swift */; };
 		01465BB42C30B8DD005C8EF6 /* OAuth2Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01465BB32C30B8DD005C8EF6 /* OAuth2Service.swift */; };
 		01465BB62C30C01B005C8EF6 /* OAuth2TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01465BB52C30C01B005C8EF6 /* OAuth2TokenStorage.swift */; };
 		01465BB82C30C05D005C8EF6 /* OAuthTokenResponseBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01465BB72C30C05D005C8EF6 /* OAuthTokenResponseBody.swift */; };
@@ -86,6 +88,8 @@
 		013DD4B02CA0CE0F00F2E00A /* ProfileServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileServiceMock.swift; sourceTree = "<group>"; };
 		013DD4B22CA0CE2D00F2E00A /* ProfileViewControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewControllerSpy.swift; sourceTree = "<group>"; };
 		013DD4B42CA1ACF800F2E00A /* ImagesListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListPresenter.swift; sourceTree = "<group>"; };
+		013DD4B72CA1DDA100F2E00A /* ImagesListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListTests.swift; sourceTree = "<group>"; };
+		013DD4B92CA1DF2900F2E00A /* ImagesListPresenterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListPresenterSpy.swift; sourceTree = "<group>"; };
 		01465BB32C30B8DD005C8EF6 /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
 		01465BB52C30C01B005C8EF6 /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
 		01465BB72C30C05D005C8EF6 /* OAuthTokenResponseBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenResponseBody.swift; sourceTree = "<group>"; };
@@ -192,6 +196,15 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
+		013DD4B62CA1DD2200F2E00A /* ImagesList */ = {
+			isa = PBXGroup;
+			children = (
+				013DD4B72CA1DDA100F2E00A /* ImagesListTests.swift */,
+				013DD4B92CA1DF2900F2E00A /* ImagesListPresenterSpy.swift */,
+			);
+			path = ImagesList;
+			sourceTree = "<group>";
+		};
 		0163BB1E2C18C38500222EE6 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
@@ -209,6 +222,7 @@
 		0185FD342C9FA09800690AA3 /* ImageFeedTests */ = {
 			isa = PBXGroup;
 			children = (
+				013DD4B62CA1DD2200F2E00A /* ImagesList */,
 				013DD4A92CA0CD5C00F2E00A /* Profile */,
 				013DD4A82CA0CD2B00F2E00A /* WebView */,
 			);
@@ -438,9 +452,11 @@
 				013DD4AD2CA0CDBC00F2E00A /* ProfileImageServiceMock.swift in Sources */,
 				013DD4B12CA0CE0F00F2E00A /* ProfileServiceMock.swift in Sources */,
 				013DD4AB2CA0CD8A00F2E00A /* ProfileViewTests.swift in Sources */,
+				013DD4B82CA1DDA100F2E00A /* ImagesListTests.swift in Sources */,
 				0185FD362C9FA09800690AA3 /* WebViewTests.swift in Sources */,
 				0185FD3F2C9FA2CD00690AA3 /* WebViewViewControllerSpy.swift in Sources */,
 				013DD4B32CA0CE2D00F2E00A /* ProfileViewControllerSpy.swift in Sources */,
+				013DD4BA2CA1DF2900F2E00A /* ImagesListPresenterSpy.swift in Sources */,
 				0185FD3D2C9FA18100690AA3 /* WebViewPresenterSpy.swift in Sources */,
 				013DD4AF2CA0CDE200F2E00A /* ProfilePresenterSpy.swift in Sources */,
 			);
