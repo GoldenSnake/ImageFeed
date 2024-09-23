@@ -40,7 +40,7 @@ final class AuthHelper: AuthHelperProtocol {
     
     func code(from url: URL) -> String? {
         if let urlComponents = URLComponents(string: url.absoluteString),
-           urlComponents.path == "/oauth/authorize/native",
+           urlComponents.path == configuration.nativePath,
            let items = urlComponents.queryItems,
            let codeItem = items.first(where: { $0.name == "code" })
         {

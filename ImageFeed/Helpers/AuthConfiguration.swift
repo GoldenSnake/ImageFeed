@@ -11,6 +11,7 @@ enum Constants {
     static let defaultBaseURL = URL(string: "https://api.unsplash.com")!
     static let unsplashURL = URL(string: "https://unsplash.com")!
     static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+    static let nativePath = "/oauth/authorize/native"
 }
 
 struct AuthConfiguration {
@@ -22,8 +23,9 @@ struct AuthConfiguration {
     let defaultBaseURL: URL
     let unsplashURL: URL
     let authURLString: String
+    let nativePath: String
 
-    init(accessKey: String, secretKey: String, redirectURI: String, accessScope: String, authPath: String, authURLString: String, defaultBaseURL: URL, unsplashURL: URL) {
+    init(accessKey: String, secretKey: String, redirectURI: String, accessScope: String, authPath: String, authURLString: String, defaultBaseURL: URL, unsplashURL: URL, nativePath: String) {
         self.accessKey = accessKey
         self.secretKey = secretKey
         self.redirectURI = redirectURI
@@ -32,6 +34,7 @@ struct AuthConfiguration {
         self.defaultBaseURL = defaultBaseURL
         self.unsplashURL = unsplashURL
         self.authURLString = authURLString
+        self.nativePath = nativePath
     }
     
     static var standard: AuthConfiguration {
@@ -42,6 +45,6 @@ struct AuthConfiguration {
                                      authPath: Constants.authPath,
                                      authURLString: Constants.unsplashAuthorizeURLString,
                                      defaultBaseURL: Constants.defaultBaseURL, 
-                                     unsplashURL: Constants.unsplashURL)
+                                     unsplashURL: Constants.unsplashURL, nativePath: Constants.nativePath)
         }
 }
