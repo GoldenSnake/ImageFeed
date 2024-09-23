@@ -18,11 +18,12 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     // MARK: - Public Properties
     var presenter: ProfilePresenterProtocol?
     
+    var avatarImage: UIImageView?
+    var nameLabel: UILabel?
+    var loginLabel: UILabel?
+    var descriptionLabel: UILabel?
+    
     // MARK: - Private Properties
-    private var avatarImage: UIImageView?
-    private var nameLabel: UILabel?
-    private var loginLabel: UILabel?
-    private var descriptionLabel: UILabel?
     private var logoutButton: UIButton?
     
     private let profileService = ProfileService.shared
