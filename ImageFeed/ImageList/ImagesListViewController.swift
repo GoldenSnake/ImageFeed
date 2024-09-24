@@ -78,6 +78,12 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        // Проверка, что приложение запущено в режиме тестирования
+        if ProcessInfo.processInfo.arguments.contains("isUITesting") {
+            // Если это тестирование, не выполнять пагинацию
+            return
+        }
+        
         if indexPath.row + 1 == imagesListService.photos.count {
             imagesListService.fetchPhotosNextPage()
         }

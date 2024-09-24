@@ -138,7 +138,6 @@
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dAR-Pj-AlJ" userLabel="Like Button">
                                                     <rect key="frame" x="354" y="4" width="44" height="44"/>
-                                                    <accessibility key="accessibilityConfiguration" identifier="likeButton"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="44" id="Ie1-o6-TlV"/>
                                                         <constraint firstAttribute="height" constant="44" id="VKU-n9-rRc"/>

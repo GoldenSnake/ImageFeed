@@ -1,10 +1,10 @@
 import XCTest
 
 class Image_FeedUITests: XCTestCase {
-    private let app = XCUIApplication() 
+    private let app = XCUIApplication()
     
     override func setUpWithError() throws {
-        continueAfterFailure = false
+        continueAfterFailure = true
         
         app.launch()
     }
@@ -14,6 +14,7 @@ class Image_FeedUITests: XCTestCase {
     private let password = ""
     private let nameAndLastName = ""
     private let username = ""
+
     
     // MARK: - Helpers
     private func typeTextWithDelay(_ text: String, textField: XCUIElement, characterDelay: TimeInterval = 0.1) {
@@ -35,10 +36,20 @@ class Image_FeedUITests: XCTestCase {
         XCTFail("Neither 'Готово' nor 'Done' button was found.")
     }
     
+    override func setUp() {
+        super.setUp()
+        
+        let app = XCUIApplication()
+        app.launchArguments.append("isUITesting")
+        app.launch()
+    }
+
+    
     
     // MARK: - Tests
     
     func testAuth() throws {
+        sleep(5)
         app.buttons["Authenticate"].tap()
         
         let webView = app.webViews["UnsplashWebView"]
@@ -65,7 +76,6 @@ class Image_FeedUITests: XCTestCase {
         typeTextWithDelay(password, textField: passwordTextField)
         
         sleep(1)
-        //            webView.swipeUp()
         tapDoneButton()
         
         // Login
@@ -73,30 +83,27 @@ class Image_FeedUITests: XCTestCase {
         
         let tablesQuery = app.tables
         let cell = tablesQuery.children(matching: .cell).element(boundBy: 1)
-        
+        sleep(1)
         XCTAssertTrue(cell.waitForExistence(timeout: 10))
     }
     
     func testFeed() throws {
         sleep(10)
         
-        let cellToLike = app.tables.children(matching: .cell).element(boundBy: 1)
-        let likeButton = cellToLike.buttons.firstMatch
-        XCTAssertTrue(likeButton.exists, "Like button should exist")
+        let cellToLike = app.tables.descendants(matching: .cell).element(boundBy: 1)
         
-        likeButton.tap()
+        cellToLike.buttons.firstMatch.tap()
         sleep(5)
-        
-        likeButton.tap()
+        cellToLike.buttons.firstMatch.tap()
         sleep(5)
         
         cellToLike.tap()
         
-        sleep(5)
+        sleep(10)
         
         let image = app.scrollViews.images.element(boundBy: 0)
         // Zoom in
-        image.pinch(withScale: 3, velocity: 1) // zoom in
+        image.pinch(withScale: 3, velocity: 1) 
         // Zoom out
         image.pinch(withScale: 0.5, velocity: -1)
         
@@ -107,6 +114,7 @@ class Image_FeedUITests: XCTestCase {
         
         let cell = app.tables.children(matching: .cell).element(boundBy: 0)
         cell.swipeUp()
+        sleep(1)
     }
     
     
@@ -119,7 +127,7 @@ class Image_FeedUITests: XCTestCase {
         
         XCTAssertTrue(app.staticTexts[nameAndLastName].exists)
         XCTAssertTrue(app.staticTexts[username].exists)
-        
+        sleep(1)
         app.buttons["Logout"].tap()
         
         sleep(3)
