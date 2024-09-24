@@ -1,12 +1,12 @@
 import XCTest
 
 class Image_FeedUITests: XCTestCase {
-    private let app = XCUIApplication() // переменная приложения
+    private let app = XCUIApplication() 
     
     override func setUpWithError() throws {
-        continueAfterFailure = false // настройка выполнения тестов, которая прекратит выполнения тестов, если в тесте что-то пошло не так
+        continueAfterFailure = false
         
-        app.launch() // запускаем приложение перед каждым тестом
+        app.launch()
     }
     
     // Персональные данные
@@ -77,51 +77,55 @@ class Image_FeedUITests: XCTestCase {
         XCTAssertTrue(cell.waitForExistence(timeout: 10))
     }
     
-        func testFeed() throws {
-            sleep(10)
-            
-            let cellToLike = app.tables.children(matching: .cell).element(boundBy: 1)
-            cellToLike.buttons.firstMatch.tap()
-            sleep(5)
-            cellToLike.buttons.firstMatch.tap()
-            sleep(5)
-            
-            cellToLike.tap()
-            
-            sleep(5)
-            
-            let image = app.scrollViews.images.element(boundBy: 0)
-            // Zoom in
-            image.pinch(withScale: 3, velocity: 1) // zoom in
-            // Zoom out
-            image.pinch(withScale: 0.5, velocity: -1)
-            
-            let navBackButton = app.buttons["Backward"]
-            navBackButton.tap()
-            
-            sleep(5)
-            
-            let cell = app.tables.children(matching: .cell).element(boundBy: 0)
-            cell.swipeUp()
-        }
+    func testFeed() throws {
+        sleep(10)
         
+        let cellToLike = app.tables.children(matching: .cell).element(boundBy: 1)
+        let likeButton = cellToLike.buttons.firstMatch
+        XCTAssertTrue(likeButton.exists, "Like button should exist")
+        
+        likeButton.tap()
+        sleep(5)
+        
+        likeButton.tap()
+        sleep(5)
+        
+        cellToLike.tap()
+        
+        sleep(5)
+        
+        let image = app.scrollViews.images.element(boundBy: 0)
+        // Zoom in
+        image.pinch(withScale: 3, velocity: 1) // zoom in
+        // Zoom out
+        image.pinch(withScale: 0.5, velocity: -1)
+        
+        let navBackButton = app.buttons["Backward"]
+        navBackButton.tap()
+        
+        sleep(5)
+        
+        let cell = app.tables.children(matching: .cell).element(boundBy: 0)
+        cell.swipeUp()
+    }
+    
     
     func testProfile() throws {
-          sleep(5)
-
-          app.tabBars.buttons.element(boundBy: 1).tap()
-
-          sleep(3)
-
-          XCTAssertTrue(app.staticTexts[nameAndLastName].exists)
-          XCTAssertTrue(app.staticTexts[username].exists)
-
-          app.buttons["Logout"].tap()
-
-          sleep(3)
-
-          app.alerts["Пока, пока!"].scrollViews.otherElements.buttons["Да"].tap()
-
-          sleep(5)
-      }
+        sleep(5)
+        
+        app.tabBars.buttons.element(boundBy: 1).tap()
+        
+        sleep(3)
+        
+        XCTAssertTrue(app.staticTexts[nameAndLastName].exists)
+        XCTAssertTrue(app.staticTexts[username].exists)
+        
+        app.buttons["Logout"].tap()
+        
+        sleep(3)
+        
+        app.alerts["Пока, пока!"].scrollViews.otherElements.buttons["Да"].tap()
+        
+        sleep(5)
+    }
 }
