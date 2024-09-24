@@ -4,9 +4,7 @@ class Image_FeedUITests: XCTestCase {
     private let app = XCUIApplication()
     
     override func setUpWithError() throws {
-        continueAfterFailure = true
-        
-        app.launch()
+        continueAfterFailure = false
     }
     
     // Персональные данные
@@ -40,7 +38,7 @@ class Image_FeedUITests: XCTestCase {
         super.setUp()
         
         let app = XCUIApplication()
-        app.launchArguments.append("isUITesting")
+        app.launchArguments.append("TestingMode")
         app.launch()
     }
 
@@ -49,7 +47,7 @@ class Image_FeedUITests: XCTestCase {
     // MARK: - Tests
     
     func testAuth() throws {
-        sleep(5)
+
         app.buttons["Authenticate"].tap()
         
         let webView = app.webViews["UnsplashWebView"]
