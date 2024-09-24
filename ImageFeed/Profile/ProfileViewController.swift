@@ -105,6 +105,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         nameLabel.textColor = .ypWhite
         nameLabel.numberOfLines = 0
+        nameLabel.accessibilityIdentifier = "nameLabel"
         
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(nameLabel)
@@ -126,6 +127,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         loginLabel.font = UIFont.systemFont(ofSize: 13)
         loginLabel.textColor = .ypWhite
         loginLabel.numberOfLines = 0
+        loginLabel.accessibilityIdentifier = "loginLabel"
         
         loginLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(loginLabel)
@@ -170,7 +172,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         )
         
         logoutButton.tintColor = .ypRed
-        
+        logoutButton.accessibilityIdentifier = "Logout"
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoutButton)
         

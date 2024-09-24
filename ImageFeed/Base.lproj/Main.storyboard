@@ -21,6 +21,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YhV-h7-4i9">
                                 <rect key="frame" x="16" y="724" width="382" height="48"/>
                                 <color key="backgroundColor" name="YP White"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Authenticate"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="TjW-ss-RKd"/>
                                 </constraints>
@@ -85,6 +86,7 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Z5U-Yn-M50"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <accessibility key="accessibilityConfiguration" identifier="UnsplashWebView"/>
                         <constraints>
                             <constraint firstItem="1uX-Hq-ujL" firstAttribute="bottom" secondItem="79l-mo-LnN" secondAttribute="bottom" id="2gC-7d-YcJ"/>
                             <constraint firstItem="k2E-ts-vZF" firstAttribute="leading" secondItem="Z5U-Yn-M50" secondAttribute="leading" id="Fra-qE-d2U"/>
@@ -136,6 +138,7 @@
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dAR-Pj-AlJ" userLabel="Like Button">
                                                     <rect key="frame" x="354" y="4" width="44" height="44"/>
+                                                    <accessibility key="accessibilityConfiguration" identifier="likeButton"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="44" id="Ie1-o6-TlV"/>
                                                         <constraint firstAttribute="height" constant="44" id="VKU-n9-rRc"/>
@@ -224,6 +227,7 @@
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PoS-pX-3Hr" userLabel="Back Button">
                                 <rect key="frame" x="8" y="8" width="48" height="48"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Backward"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="5ep-Vu-wgc"/>
                                     <constraint firstAttribute="width" constant="48" id="mU6-XI-wr7"/>

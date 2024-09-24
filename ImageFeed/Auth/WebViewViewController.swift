@@ -43,6 +43,7 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
             guard let self else { return }
             self.updateProgress()
         }
+        webView.accessibilityIdentifier = "UnsplashWebView"
     }
     
     // MARK: - Overridden Methods
