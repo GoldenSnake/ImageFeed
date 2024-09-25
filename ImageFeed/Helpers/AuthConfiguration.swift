@@ -12,6 +12,7 @@ enum Constants {
     static let unsplashURL = URL(string: "https://unsplash.com")!
     static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
     static let nativePath = "/oauth/authorize/native"
+    static let code = "code"
 }
 
 struct AuthConfiguration {
@@ -24,8 +25,18 @@ struct AuthConfiguration {
     let unsplashURL: URL
     let authURLString: String
     let nativePath: String
-
-    init(accessKey: String, secretKey: String, redirectURI: String, accessScope: String, authPath: String, authURLString: String, defaultBaseURL: URL, unsplashURL: URL, nativePath: String) {
+    let code: String
+    
+    init(accessKey: String,
+         secretKey: String,
+         redirectURI: String,
+         accessScope: String,
+         authPath: String,
+         authURLString: String,
+         defaultBaseURL: URL,
+         unsplashURL: URL,
+         nativePath: String,
+         code: String) {
         self.accessKey = accessKey
         self.secretKey = secretKey
         self.redirectURI = redirectURI
@@ -35,16 +46,19 @@ struct AuthConfiguration {
         self.unsplashURL = unsplashURL
         self.authURLString = authURLString
         self.nativePath = nativePath
+        self.code = code
     }
     
     static var standard: AuthConfiguration {
-            return AuthConfiguration(accessKey: Constants.accessKey,
-                                     secretKey: Constants.secretKey,
-                                     redirectURI: Constants.redirectURI,
-                                     accessScope: Constants.accessScope,
-                                     authPath: Constants.authPath,
-                                     authURLString: Constants.unsplashAuthorizeURLString,
-                                     defaultBaseURL: Constants.defaultBaseURL, 
-                                     unsplashURL: Constants.unsplashURL, nativePath: Constants.nativePath)
-        }
+        AuthConfiguration(accessKey: Constants.accessKey,
+                          secretKey: Constants.secretKey,
+                          redirectURI: Constants.redirectURI,
+                          accessScope: Constants.accessScope,
+                          authPath: Constants.authPath,
+                          authURLString: Constants.unsplashAuthorizeURLString,
+                          defaultBaseURL: Constants.defaultBaseURL,
+                          unsplashURL: Constants.unsplashURL,
+                          nativePath: Constants.nativePath,
+                          code: Constants.code)
+    }
 }

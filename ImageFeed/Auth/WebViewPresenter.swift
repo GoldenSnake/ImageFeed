@@ -17,8 +17,6 @@ final class WebViewPresenter: WebViewPresenterProtocol {
         self.authHelper = authHelper
     }
     
-    
-    
     func viewDidLoad() {
         guard let request = authHelper.authRequest() else {
             assertionFailure("Failed to construct authorization URLRequest")

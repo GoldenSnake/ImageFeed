@@ -36,7 +36,7 @@ final class AuthHelper: AuthHelperProtocol {
         urlComponents.queryItems = [
             URLQueryItem(name: "client_id", value: configuration.accessKey),
             URLQueryItem(name: "redirect_uri", value: configuration.redirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
+            URLQueryItem(name: "response_type", value: configuration.code),
             URLQueryItem(name: "scope", value: configuration.accessScope)
         ]
         
@@ -47,7 +47,7 @@ final class AuthHelper: AuthHelperProtocol {
         if let urlComponents = URLComponents(string: url.absoluteString),
            urlComponents.path == configuration.nativePath,
            let items = urlComponents.queryItems,
-           let codeItem = items.first(where: { $0.name == "code" })
+           let codeItem = items.first(where: { $0.name == configuration.code })
         {
             return codeItem.value
         } else {

@@ -23,10 +23,9 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
     // MARK: - Public Properties
     
     weak var delegate: WebViewViewControllerDelegate?
+    var presenter: WebViewPresenterProtocol?
     
     // MARK: - Private Properties
-    
-    var presenter: WebViewPresenterProtocol?
     
     private var estimatedProgressObservation: NSKeyValueObservation?
     
