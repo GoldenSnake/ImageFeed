@@ -35,6 +35,11 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
        }
     
     func getCellHeight(indexPath: IndexPath, tableView: UITableView) -> CGFloat {
+        
+        guard indexPath.row >= 0, indexPath.row < imagesListService.photos.count else {
+                return UITableView.automaticDimension
+            }
+        
         let photo = imagesListService.photos[indexPath.row]
         
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)

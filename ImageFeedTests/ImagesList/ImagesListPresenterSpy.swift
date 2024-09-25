@@ -8,7 +8,7 @@ final class ImagesListPresenterSpy: ImagesListPresenterProtocol {
     
     var photos: [Photo] = []
     
-    var isViewDidLoadCalled: Bool = false
+    var isViewDidLoadCalled = false
     
     func viewDidLoad() {
         isViewDidLoadCalled = true
