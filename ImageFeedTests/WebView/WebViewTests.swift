@@ -50,7 +50,7 @@ final class WebViewTests: XCTestCase {
         //given
         let authHelper = AuthHelper() //Dummy
         let presenter = WebViewPresenter(authHelper: authHelper)
-        let progress: Float = 1.0
+        let progress = Float(1.0)
         
         //when
         let shouldHideProgress = presenter.shouldHideProgress(for: progress) // return value verification
@@ -75,21 +75,31 @@ final class WebViewTests: XCTestCase {
         XCTAssertTrue(urlString.contains(configuration.authURLString))
         XCTAssertTrue(urlString.contains(configuration.accessKey))
         XCTAssertTrue(urlString.contains(configuration.redirectURI))
-        XCTAssertTrue(urlString.contains("code"))
+        XCTAssertTrue(urlString.contains(configuration.code))
         XCTAssertTrue(urlString.contains(configuration.accessScope))
     }
     
     func testCodeFromURL() {
-        //given
-        var urlComponents = URLComponents(string: "https://unsplash.com/oauth/authorize/native")!
-        urlComponents.queryItems = [URLQueryItem(name: "code", value: "test code")]
-        let url = urlComponents.url!
+        // given
+        let configuration = AuthConfiguration.standard
+        guard let baseUrl = configuration.unsplashURL.appendingPathComponent(configuration.nativePath).absoluteString as String?,
+              var urlComponents = URLComponents(string: baseUrl) else {
+            XCTFail("Failed to create URLComponents with provided base URL.")
+            return
+        }
+        
+        urlComponents.queryItems = [URLQueryItem(name: configuration.code, value: "test code")]
+        guard let url = urlComponents.url else {
+            XCTFail("Failed to create URL from URLComponents.")
+            return
+        }
+        
         let authHelper = AuthHelper()
         
-        //when
+        // when
         let code = authHelper.code(from: url)
         
-        //then
+        // then
         XCTAssertEqual(code, "test code")
     }
     
