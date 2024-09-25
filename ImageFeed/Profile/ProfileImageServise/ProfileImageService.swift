@@ -5,6 +5,10 @@
 
 import Foundation
 
+protocol ProfileImageServiceProtocol {
+    var avatarURL: String? { get }
+}
+
 enum ProfileImageServiceError: Error, LocalizedError {
     case accessTokenNotDefined
     case repeatedProfileImageRequest
@@ -22,7 +26,7 @@ enum ProfileImageServiceError: Error, LocalizedError {
     }
 }
 
-final class ProfileImageService {
+final class ProfileImageService: ProfileImageServiceProtocol {
     
     static let shared = ProfileImageService()
     
@@ -93,7 +97,7 @@ final class ProfileImageService {
     }
     
     private func makeProfileImageRequest(token: String, username: String) -> URLRequest? {
-        guard let apiURL = Constants.apiURL else {return nil}
+        let apiURL = Constants.defaultBaseURL
         let url = apiURL
             .appendingPathComponent("users")
             .appendingPathComponent(username)

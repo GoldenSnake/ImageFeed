@@ -117,7 +117,7 @@ final class ImagesListService {
     
     private func makePhotosRequest(token: String, page: Int) -> URLRequest? {
         
-        guard let apiURL = Constants.apiURL else {return nil}
+        let apiURL = Constants.defaultBaseURL
         
         let url = apiURL.appendingPathComponent("photos")
         
@@ -138,7 +138,7 @@ final class ImagesListService {
     
     private func makeLikeRequest(token: String, photoId: String, isLike: Bool) -> URLRequest? {
         
-        guard let apiURL = Constants.apiURL else {return nil}
+        let apiURL = Constants.defaultBaseURL 
         
         let url = apiURL
             .appendingPathComponent("photos")

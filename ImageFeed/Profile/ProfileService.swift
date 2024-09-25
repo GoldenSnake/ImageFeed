@@ -5,6 +5,10 @@
 
 import Foundation
 
+protocol ProfileServiceProtocol {
+    var profile: Profile? { get }
+}
+
 enum ProfileServiceError: Error, LocalizedError {
     case repeatedProfileRequest
     case failedToCreateProfileRequest
@@ -19,7 +23,7 @@ enum ProfileServiceError: Error, LocalizedError {
     }
 }
 
-final class ProfileService {
+final class ProfileService: ProfileServiceProtocol {
     static let shared = ProfileService()
     
     private var lastToken: String?
@@ -75,7 +79,7 @@ final class ProfileService {
     }
     
     private func makeProfileRequest(token: String) -> URLRequest? {
-        guard let apiURL = Constants.apiURL else {return nil}
+        let apiURL = Constants.defaultBaseURL
         let url = apiURL.appendingPathComponent("me")
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
