@@ -12,7 +12,6 @@ class Image_FeedUITests: XCTestCase {
     private let password = ""
     private let nameAndLastName = ""
     private let username = ""
-
     
     // MARK: - Helpers
     private func typeTextWithDelay(_ text: String, textField: XCUIElement, characterDelay: TimeInterval = 0.1) {
@@ -41,13 +40,11 @@ class Image_FeedUITests: XCTestCase {
         app.launchArguments.append("TestingMode")
         app.launch()
     }
-
-    
     
     // MARK: - Tests
     
     func testAuth() throws {
-
+        
         app.buttons["Authenticate"].tap()
         
         let webView = app.webViews["UnsplashWebView"]
@@ -88,7 +85,11 @@ class Image_FeedUITests: XCTestCase {
     func testFeed() throws {
         sleep(10)
         
-        let cellToLike = app.tables.descendants(matching: .cell).element(boundBy: 1)
+        let cell = app.tables.children(matching: .cell).element(boundBy: 0)
+        cell.swipeUp()
+        sleep(1)
+        
+        let cellToLike = app.tables.descendants(matching: .cell).element(boundBy: 2)
         
         cellToLike.buttons.firstMatch.tap()
         sleep(5)
@@ -101,20 +102,14 @@ class Image_FeedUITests: XCTestCase {
         
         let image = app.scrollViews.images.element(boundBy: 0)
         // Zoom in
-        image.pinch(withScale: 3, velocity: 1) 
+        image.pinch(withScale: 3, velocity: 1)
         // Zoom out
         image.pinch(withScale: 0.5, velocity: -1)
         
         let navBackButton = app.buttons["Backward"]
         navBackButton.tap()
-        
-        sleep(5)
-        
-        let cell = app.tables.children(matching: .cell).element(boundBy: 0)
-        cell.swipeUp()
         sleep(1)
     }
-    
     
     func testProfile() throws {
         sleep(5)
@@ -131,7 +126,10 @@ class Image_FeedUITests: XCTestCase {
         sleep(3)
         
         app.alerts["Пока, пока!"].scrollViews.otherElements.buttons["Да"].tap()
-        
         sleep(5)
+        
+        let authButton =  app.buttons["Authenticate"]
+        XCTAssertTrue(authButton.exists, "Не удалось открыть экран авторизации после выхода из профиля.")
+        
     }
 }
